@@ -1,0 +1,16 @@
+pair,same_row,phi,lo,hi
+probe L16 × probe L8,True,0.7527,0.6217,0.876
+perplexity × token anomaly,True,0.3496,0.181,0.5008
+perplexity × probe L8,False,0.6205,0.4522,0.7706
+perplexity × probe L16,False,0.5937,0.4172,0.7551
+perplexity × refusal prime,False,0.5774,0.4074,0.7349
+perplexity × SmoothLLM,False,0.5659,0.4026,0.7176
+refusal prime × SmoothLLM,False,0.557,0.3926,0.7144
+probe L16 × SmoothLLM,False,0.4852,0.3131,0.6473
+probe L8 × SmoothLLM,False,0.4751,0.2994,0.6413
+probe L8 × refusal prime,False,0.4583,0.2785,0.6335
+probe L16 × refusal prime,False,0.4463,0.2602,0.6195
+probe L8 × token anomaly,False,0.3852,0.2162,0.5415
+SmoothLLM × token anomaly,False,0.3407,0.1603,0.5159
+probe L16 × token anomaly,False,0.3236,0.155,0.4777
+refusal prime × token anomaly,False,0.2996,0.1208,0.4708

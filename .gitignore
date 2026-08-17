@@ -1,0 +1,39 @@
+# Policy: run artifacts (data/, results/, trained probes) are TRACKED for reproducibility.
+# Only setup/tooling cruft and huge *downloaded* model weights (run inputs, not artifacts)
+# are ignored.
+
+# --- setup / tooling cruft (not part of any run) ---
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ipynb_checkpoints/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# --- editor / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- secrets / local environments (never part of the reproducible run) ---
+.env
+*.env
+!*.env.example
+.venv/
+venv/
+
+# --- large DOWNLOADED model weights / HF cache: inputs to the run, not artifacts,
+#     and far too large for git. Trained linear probes live in data/*.pt and ARE kept
+#     (small run outputs), so *.pt is deliberately NOT ignored. ---
+*.safetensors
+*.bin
+*.gguf
+hub/
+*_weights/
+
+# Explicitly KEEP the run artifacts even though tools often template them out:
+!data/
+!results/

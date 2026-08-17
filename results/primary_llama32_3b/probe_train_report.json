@@ -1,0 +1,10 @@
+{
+  "model_id": "meta-llama/Llama-3.2-3B-Instruct",
+  "layer": 14,
+  "n_train": 520,
+  "n_val": 130,
+  "val_auroc": 1.0,
+  "val_acc": 0.9846153846153847,
+  "weights_path": "C:\\Users\\Abrar\\Code_Projects\\defense-correlation\\data\\probe_llama32_3b.pt",
+  "dedup_reasserted": true
+}

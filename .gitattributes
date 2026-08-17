@@ -1,0 +1,12 @@
+# Normalise line endings so the repo is clean across Windows (dev) and Linux (Kaggle).
+* text=auto eol=lf
+
+# Windows-only orchestration keeps CRLF.
+*.ps1 text eol=crlf
+
+# Notebooks and data are treated as-is.
+*.ipynb -text
+*.jsonl -text
+
+# Collapse the notebook in GitHub diffs.
+*.ipynb linguist-generated=false

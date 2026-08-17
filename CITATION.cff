@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+title: "Measuring failure correlation between stacked LLM defenses"
+message: "If you use this code or its measured Table 6 / Figure 3(a), please cite the accompanying paper."
+type: software
+authors:
+  - family-names: Alotaibi
+    given-names: Abrar
+keywords:
+  - LLM safety
+  - jailbreak
+  - defense stacking
+  - failure correlation
+  - StrongREJECT
+license: MIT
