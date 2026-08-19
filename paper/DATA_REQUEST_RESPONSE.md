@@ -138,7 +138,9 @@ return an infinite odds ratio and one returns an undefined p, and all six of its
 at exactly 1.000.
 
 Benign-refusal φ across 21 pairs: mean **0.573**, range **0.272 to 1.000**, positive in
-**21/21**.
+**21/21** — but read this with B3 above: conditioning on the base model's 8-prompt floor
+collapses it to mean 0.056 over the 10 pairs that remain measurable. The supplementary matrix
+should carry that caveat in its caption.
 
 ### B5. Intervals for Q, disagreement and double-fault — delivered
 
