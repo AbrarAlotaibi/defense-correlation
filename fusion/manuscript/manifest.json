@@ -1,0 +1,43 @@
+{
+  "n_behaviours": 100,
+  "n_benign": 100,
+  "defenses": [
+    "llamaguard",
+    "ppl_filter",
+    "probe",
+    "probe_b",
+    "refusal_prime",
+    "smoothllm",
+    "token_anomaly"
+  ],
+  "boot": 10000,
+  "or_convention": "Haldane-Anscombe +0.5 applied uniformly",
+  "bh_over": "the 15 non-degenerate pairs (Llama Guard excluded)",
+  "A1_ppl_x_token_anomaly": {
+    "crude_OR_haldane": 6.014,
+    "CMH_OR": 1.393,
+    "p": 0.9072,
+    "q": 0.9435,
+    "n_strata": 5,
+    "min_stratum": 8
+  },
+  "B2": {
+    "dependency_rows_spanned": [
+      "first_token_distribution",
+      "internal_representations",
+      "perturbation_stability",
+      "token_surface"
+    ],
+    "rowbased_max_size": 4,
+    "rowbased_ceiling_reason": "one member per row; the six non-Llama-Guard defenses span 4 rows, so rule 2 cannot exceed size 4",
+    "greedy_max_size": 6,
+    "identical_membership_up_to_size": 4
+  },
+  "B4c": {
+    "n_pairs": 21,
+    "mean_phi": 0.573,
+    "min_phi": 0.272,
+    "max_phi": 1.0,
+    "positive": 21
+  }
+}
