@@ -1,0 +1,184 @@
+% =====================================================================================
+% Companion insert to results_insert.tex: the classifier-fusion recast.
+%
+% ALL NUMBERS ARE MEASURED. No placeholders.
+%   Source : results/hpc_vicuna_autodan/ (Vicuna-7B-v1.5, fluent AutoDAN-style adversary,
+%            n = 100 JBB behaviours + 100 matched benign prompts, StrongREJECT gold).
+%   Script : scripts/fusion_analysis.py, inputs from scripts/09_build_fusion_inputs.py
+%   Data   : fusion/fusion_diversity*.csv, fusion/fusion_combination_rules*.csv
+%
+% Place after \S\ref{sec:complementary} and before \S\ref{sec:limits-corr}.
+% The final paragraph is written to be appended to the Limitations subsection instead.
+%
+% Requires one bib entry:
+%   @article{kuncheva2003measures,
+%     title   = {Measures of Diversity in Classifier Ensembles and Their Relationship
+%                with the Ensemble Accuracy},
+%     author  = {Kuncheva, Ludmila I. and Whitaker, Christopher J.},
+%     journal = {Machine Learning}, volume = {51}, number = {2}, pages = {181--207},
+%     year    = {2003}}
+% =====================================================================================
+
+\subsection{The same result in the vocabulary of classifier fusion}
+\label{sec:fusion}
+
+Stacking defenses is an ensemble construction, and the ensemble literature has measured
+error dependence for two decades. Restating our result in that vocabulary does two things:
+it checks that the effect is not an artefact of the particular statistic we chose, and it
+lets us ask the design question $\phi$ alone cannot answer, namely which combination rule
+and which membership one should actually deploy.
+
+Following \citet{kuncheva2003measures} we compute diversity over \emph{correctness}: a
+defense is correct on a behaviour when it blocks the attack, so $c_d(i)=1-b_d(i)$. On that
+convention the $Q$-statistic, the disagreement measure and the double-fault rate carry their
+standard signs. Two correspondences are worth stating because they are definitional rather
+than empirical. First, $\phi$ is invariant under flipping both variables, so the $\phi$
+computed on correctness is exactly the $\phi$ of Table~\ref{tab:dependency}; no number
+changes. Second, the double-fault rate is by construction the rate at which both members are
+wrong, which is the joint breach rate $\mathrm{ASR}_{d_1d_2}$ of Eq.~\eqref{eq:joint}. Our
+$\Delta$ is therefore the excess double-fault over independence, and Table~\ref{tab:fusion}
+is a re-presentation of Table~\ref{tab:dependency} rather than a new measurement.
+
+% -------------------------------------------------------------------------------------
+\begin{table}[t]
+\centering
+\caption{Pairwise diversity for the fifteen measurable pairs, in the vocabulary of
+\citet{kuncheva2003measures}. Measures are computed on the correctness indicator. $DF$ is
+the double-fault rate, which is identically the joint breach rate of Eq.~\eqref{eq:joint};
+$DF_{\mathrm{ind}}$ is its value under independence, so $DF-DF_{\mathrm{ind}}$ is the
+$\Delta$ of Table~\ref{tab:dependency}. $\phi$ is unchanged from that table. Ordered by
+$DF$. Llama~Guard is excluded for the reason given in the text.}
+\label{tab:fusion}
+\begin{tabular}{lccccc}
+\toprule
+Defense pair & $Q$ & dis. & $DF$ & $DF_{\mathrm{ind}}$ & $\phi$ \\
+\midrule
+perplexity $\times$ probe$_{16}$      & 0.891 & 0.18 & 0.580 & 0.449 & 0.59 \\
+probe$_{16}$ $\times$ probe$_{8}$     & 0.977 & 0.12 & 0.580 & 0.408 & 0.75 \\
+perplexity $\times$ probe$_{8}$       & 0.909 & 0.18 & 0.540 & 0.396 & 0.62 \\
+perplexity $\times$ refusal-prime     & 0.880 & 0.20 & 0.530 & 0.396 & 0.58 \\
+probe$_{16}$ $\times$ refusal-prime   & 0.769 & 0.26 & 0.510 & 0.408 & 0.45 \\
+perplexity $\times$ SmoothLLM         & 0.887 & 0.22 & 0.490 & 0.356 & 0.57 \\
+probe$_{16}$ $\times$ SmoothLLM       & 0.825 & 0.26 & 0.480 & 0.367 & 0.49 \\
+probe$_{8}$ $\times$ refusal-prime    & 0.765 & 0.26 & 0.470 & 0.360 & 0.46 \\
+refusal-prime $\times$ SmoothLLM      & 0.859 & 0.22 & 0.460 & 0.324 & 0.56 \\
+probe$_{8}$ $\times$ SmoothLLM        & 0.784 & 0.26 & 0.440 & 0.324 & 0.48 \\
+perplexity $\times$ token-anomaly     & 0.738 & 0.39 & 0.310 & 0.231 & 0.35 \\
+probe$_{16}$ $\times$ token-anomaly   & 0.709 & 0.41 & 0.310 & 0.238 & 0.32 \\
+probe$_{8}$ $\times$ token-anomaly    & 0.750 & 0.35 & 0.300 & 0.210 & 0.39 \\
+refusal-prime $\times$ token-anomaly  & 0.610 & 0.39 & 0.280 & 0.210 & 0.30 \\
+SmoothLLM $\times$ token-anomaly      & 0.652 & 0.35 & 0.270 & 0.189 & 0.34 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{The verdict is measure-independent.}
+Every one of the fifteen pairs has $Q>0$ and a double-fault rate above its independence
+prediction, with $Q$ ranging from $0.610$ to $0.977$. Across pairs the rank agreement
+between measures is high: Spearman $\rho=0.99$ between $Q$ and $\phi$, $-0.97$ between
+disagreement and $\phi$, and $0.89$ between double-fault and $\phi$. The conclusion of
+\S\ref{sec:corr-measure} is therefore not an artefact of choosing $\phi$; three further
+statistics, developed independently for ensemble analysis, order the pairs the same way and
+reach the same sign. We regard this as a robustness check rather than a new finding, and
+report it as such.
+
+\paragraph{Why Llama~Guard is excluded here.}
+Table~\ref{tab:fusion} omits Llama~Guard for a sharper reason than in
+Table~\ref{tab:dependency}. With a residual ASR of $0.01$ the product $n_{01}n_{10}$
+underflows and $Q$ saturates at exactly $1.000$ for all six of its pairs, its algebraic
+maximum, irrespective of the underlying association. Including those six pairs drags the
+$Q$--$\phi$ rank correlation from $0.99$ to $-0.26$. This is a degeneracy of $Q$ at extreme
+marginals rather than a disagreement between measures --- disagreement and double-fault are
+unaffected --- but it is a concrete reason to prefer $\phi$, whose bootstrap interval simply
+widens instead of saturating, when marginals are small. It also reinforces the point of
+\S\ref{par:attack-class}: a defense that the available adversary cannot stress is not merely
+hard to assess, it breaks some standard diagnostics outright.
+
+\paragraph{Combination rules.}
+The stack of \S\ref{sec:corr-measure} is a unanimity veto: one blocker suffices, so an attack
+succeeds only when every member is breached. That is the $k=1$ case of a $k$-of-$n$ rule, and
+sweeping $k$ traces the operating curve of Table~\ref{tab:combrules}. The curve is steep and
+asymmetric. Relaxing from $k=1$ to $k=2$ buys $22$ points of benign false refusal at a cost
+of $18$ points of attack success, and by $k=3$ residual ASR has passed $0.4$. At this
+operating point the veto is the only defensible corner, which is worth stating because the
+fusion literature's usual advice --- majority vote --- is actively harmful when the members'
+errors are as correlated as they are here.
+
+The last row of Table~\ref{tab:combrules} is the more uncomfortable one. Llama~Guard alone
+attains the same $0.010$ residual ASR as the full seven-member stack at roughly half its
+false-refusal cost. Six of the seven layers, on this target and this adversary, purchase no
+additional security and a great deal of benign refusal. This is the intersection-versus-direct
+observation of \S\ref{sec:corr-measure} restated as a deployment decision.
+
+% -------------------------------------------------------------------------------------
+\begin{table}[t]
+\centering
+\caption{Combination rules over the seven defenses. The stack blocks an input when at least
+$k$ members block it; $k=1$ is the unanimity veto reported in \S\ref{sec:corr-measure}.
+Residual ASR is estimated from the stored per-defense breach vectors and inherits the
+intersection assumption discussed in \S\ref{sec:limits-corr}; false-refusal rates are
+measured directly on the benign set.}
+\label{tab:combrules}
+\begin{tabular}{lcc}
+\toprule
+Rule & residual ASR & benign FRR \\
+\midrule
+$k=1$ of 7 (veto, as reported) & 0.010 & 0.520 \\
+$k=2$ of 7                     & 0.190 & 0.300 \\
+$k=3$ of 7                     & 0.430 & 0.110 \\
+$k=4$ of 7                     & 0.590 & 0.080 \\
+$k=7$ of 7 (unanimous flag)    & 0.790 & 0.080 \\
+\midrule
+strongest single layer (Llama~Guard) & 0.010 & 0.260 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Selecting members: the row heuristic is not leaving anything on the table.}
+Composition rule~2 recommends at most one defense per dependency row. An obvious objection is
+that this is a coarse proxy for what one actually wants, which is low double-fault. We
+therefore compare it against a greedy search that selects members by directly minimising
+double-fault with the current set. Excluding Llama~Guard, whose floor makes every rule look
+identical, the two procedures select the \emph{same} members in the \emph{same} order, with
+identical ASR and FRR at every stack size: token-anomaly ($0.35/0.09$), then SmoothLLM
+($0.27/0.27$), then probe$_{8}$ ($0.23/0.28$), then refusal-prime ($0.20/0.45$). The row
+heuristic, which requires only the taxonomy of Table~\ref{tab:dependency} and no measurement
+at all, recovers the choice made by a search with full access to the joint breach data. That
+is a useful property for practitioners, who will have the taxonomy long before they have the
+correlation matrix.
+
+\paragraph{False refusals are correlated too, and compose worse than any rule predicts.}
+\S\ref{sec:h3-note} reported that the assembled stack refuses $0.810$ of benign prompts
+against an independence prediction of $0.766$. The per-prompt refusal vectors let us
+decompose that. Pairwise $\phi$ on benign refusals is positive for all $21$ pairs, mean
+$0.573$, reaching $1.000$ for perplexity $\times$ probe$_{16}$, which refuse on an identical
+set of prompts. The benign side therefore carries the same positive dependence as the harmful
+side, and in consequence the \emph{empirical} union --- the fraction of benign prompts that
+at least one member refuses --- is only $0.520$, far below the $0.766$ that independence
+predicts.
+
+The deployed stack nonetheless refuses $0.810$, more than either quantity. No union over
+independently measured decisions can produce that value, and the gap is not noise: it is
+$0.29$ above the empirical union. The mechanism is composition itself. Members run in
+sequence and each alters the response the next one sees --- SmoothLLM perturbs the prompt,
+refusal-priming prepends a refusal-shaped prefix --- so refusals compound rather than merely
+intersect. The practical consequence is that independence fails on the benign side as well as
+the harmful side, and it fails in \emph{both} directions: it overestimates the refusal burden
+of a hypothetical union and underestimates that of the pipeline actually deployed. A designer
+who budgets false refusals by assuming independence will be wrong either way, and the sign of
+the error depends on a modelling choice they may not realise they are making.
+
+% =====================================================================================
+% APPEND TO \S\ref{sec:limits-corr} (Limitations)
+% =====================================================================================
+
+\textbf{Combination rules beyond the veto.} The breach vectors underlying
+Table~\ref{tab:combrules} come from re-optimising the attack against each defense
+\emph{separately}. Every $k>1$ row therefore rests on the same intersection assumption used
+for the pairwise analysis, which we validated by direct attack at $k=1$ only (intersection
+predicts $0.010$, the direct attack yields $0.000$, agreement $99/100$). Those rows are
+estimates, not measurements, and an adversary optimising against a $k$-of-$n$ rule directly
+would face a different objective. The refusal decomposition of \S\ref{sec:fusion} shows the
+assumption is measurably imperfect on the benign side, where the deployed stack departs from
+the union of its members by $0.29$; we have no reason to assume it is exact on the harmful
+side merely because it held at $k=1$.
