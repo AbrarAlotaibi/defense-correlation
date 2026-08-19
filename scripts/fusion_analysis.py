@@ -298,6 +298,76 @@ def row_based_selection(breach, refusal, rowmap, max_size=None):
     return pd.DataFrame(out)
 
 
+
+# ------------------------------------------------- difficulty stratification
+
+
+def cmh_all_pairs(breach, n_strata=None):
+    """
+    Cochran-Mantel-Haenszel common odds ratio for every pair, stratifying
+    behaviours by a difficulty score computed from the OTHER defenses only, so
+    the stratifier is independent of the pair under test. This is the analysis
+    of Section 10.3; the manuscript reports six pairs and this returns all of
+    them, which is what the reviewer asks for.
+
+    Returns a DataFrame with the crude odds ratio, the CMH common odds ratio,
+    the CMH chi-square test p-value, and the stratum sizes.
+    """
+    from scipy.stats import chi2
+
+    names = list(breach.columns)
+    B = breach.to_numpy()
+    rows = []
+    for i, j in itertools.combinations(range(len(names)), 2):
+        others = [k for k in range(len(names)) if k not in (i, j)]
+        diff = B[:, others].sum(axis=1)          # difficulty from the other defenses
+        b1, b2 = B[:, i], B[:, j]
+
+        n11 = np.sum((b1 == 1) & (b2 == 1)); n10 = np.sum((b1 == 1) & (b2 == 0))
+        n01 = np.sum((b1 == 0) & (b2 == 1)); n00 = np.sum((b1 == 0) & (b2 == 0))
+        crude = (n11 * n00) / (n10 * n01) if n10 * n01 > 0 else np.inf
+
+        num = den = 0.0
+        e = v = obs = 0.0
+        strata = []
+        for d in np.unique(diff):
+            m = diff == d
+            n = int(m.sum())
+            if n < 2:
+                continue
+            x, y = b1[m] == 1, b2[m] == 1   # bool, not int: ~ on ints is bitwise
+            a = float(np.sum(x & y)); b = float(np.sum(x & ~y))
+            c = float(np.sum(~x & y)); dd = float(np.sum(~x & ~y))
+            if n == 0:
+                continue
+            num += a * dd / n
+            den += b * c / n
+            r1, r2 = a + b, c + dd
+            c1, c2 = a + c, b + dd
+            obs += a
+            e += r1 * c1 / n
+            if n > 1:
+                v += (r1 * r2 * c1 * c2) / (n * n * (n - 1))
+            strata.append(n)
+        or_cmh = num / den if den > 0 else np.inf
+        if v > 0:
+            stat = (abs(obs - e) - 0.5) ** 2 / v
+            p = float(1 - chi2.cdf(stat, 1))
+        else:
+            p = np.nan
+        rows.append(dict(d1=names[i], d2=names[j], crude_OR=crude,
+                         CMH_OR=or_cmh, p=p, n_strata=len(strata),
+                         min_stratum=min(strata) if strata else 0))
+    out = pd.DataFrame(rows)
+    # Benjamini-Hochberg across pairs
+    ok = out.p.notna()
+    ranked = out.loc[ok].sort_values("p")
+    m = len(ranked)
+    q = (ranked.p.to_numpy() * m / np.arange(1, m + 1))
+    q = np.minimum.accumulate(q[::-1])[::-1]
+    out.loc[ranked.index, "q"] = np.clip(q, 0, 1)
+    return out
+
 # ------------------------------------------------------------------ output
 
 
@@ -547,10 +617,18 @@ def main():
         base = pd.read_csv(a.base_refusal).iloc[:, 0].to_numpy()
         print(f"undefended base-model refusal floor: {base.mean():.3f}\n")
 
+    cmh = cmh_all_pairs(breach)
+    print("--- Cochran-Mantel-Haenszel, all pairs, stratified by difficulty ---")
+    print("(difficulty computed from the other defenses only, so it is")
+    print(" independent of the pair under test; q is Benjamini-Hochberg)")
+    print(cmh.sort_values("CMH_OR", ascending=False).round(3).to_string(index=False), "\n")
+    cmh.to_csv("fusion_cmh_all_pairs.csv", index=False)
+
     div.to_csv("fusion_diversity.csv", index=False)
     curve.to_csv("fusion_combination_rules.csv", index=False)
     write_tex(div, agree, curve, ref, greedy, rowsel, a.out)
-    print(f"wrote {a.out}, fusion_diversity.csv, fusion_combination_rules.csv")
+    print(f"wrote {a.out}, fusion_diversity.csv, fusion_combination_rules.csv, "
+          "fusion_cmh_all_pairs.csv")
 
 
 if __name__ == "__main__":

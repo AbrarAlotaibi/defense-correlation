@@ -73,4 +73,30 @@ phi -0.26 -0.97  0.95  1.00
     4                llamaguard, token_anomaly, smoothllm, probe_b 0.01 0.41
     5 llamaguard, token_anomaly, smoothllm, probe_b, refusal_prime 0.01 0.52 
 
-wrote fusion_results.tex, fusion_diversity.csv, fusion_combination_rules.csv
+--- Cochran-Mantel-Haenszel, all pairs, stratified by difficulty ---
+(difficulty computed from the other defenses only, so it is
+ independent of the pair under test; q is Benjamini-Hochberg)
+           d1            d2  crude_OR  CMH_OR     p  n_strata  min_stratum     q
+   llamaguard    ppl_filter       inf     inf   NaN         6            6   NaN
+   llamaguard         probe       inf     inf 0.039         6            6 0.195
+   llamaguard       probe_b       inf     inf 0.039         6            5 0.195
+   llamaguard refusal_prime       inf     inf 0.289         6            6 0.579
+   llamaguard     smoothllm       inf     inf 0.390         6            5 0.705
+   llamaguard token_anomaly       inf     inf 0.906         6            6 0.940
+        probe       probe_b    87.000 151.368 0.000         5           10 0.000
+refusal_prime     smoothllm    13.143   4.273 0.025         5           10 0.195
+   ppl_filter refusal_prime    15.725   3.947 0.063         5           10 0.251
+   ppl_filter     smoothllm    16.718   3.370 0.160         5           10 0.533
+   ppl_filter       probe_b    21.000   3.067 0.211         5           10 0.579
+   ppl_filter         probe    17.400   2.829 0.247         5            6 0.579
+      probe_b token_anomaly     7.000   2.564 0.276         5            8 0.579
+    smoothllm token_anomaly     4.750   1.742 0.423         5            5 0.705
+   ppl_filter token_anomaly     6.643   1.377 0.922         5            8 0.940
+refusal_prime token_anomaly     4.125   1.317 0.820         5            6 0.940
+        probe     smoothllm    10.400   1.250 0.935         5            8 0.940
+        probe token_anomaly     5.865   1.037 0.759         5            8 0.940
+      probe_b     smoothllm     8.250   0.912 0.839         5            7 0.940
+      probe_b refusal_prime     7.509   0.873 0.874         5            9 0.940
+        probe refusal_prime     7.667   0.716 0.940         5            7 0.940 
+
+wrote fusion_results.tex, fusion_diversity.csv, fusion_combination_rules.csv, fusion_cmh_all_pairs.csv

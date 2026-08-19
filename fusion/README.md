@@ -116,6 +116,37 @@ merely intersect. This is worth a line in the paper — the independence assumpt
 the benign side as well as the harmful side, and it fails in **both** directions depending on
 whether you are predicting the union or the deployed pipeline.
 
+### 6. Difficulty-stratified CMH, all pairs
+
+The script also runs a Cochran-Mantel-Haenszel test per pair, stratifying behaviours by a
+difficulty score built from the *other* defenses only, so the stratifier is independent of the
+pair under test. This reproduces `results/hpc_vicuna_autodan/confound_check.json` **exactly**
+(max deviation 0.0 on the common odds ratio and 3.1e-15 on p across all 15 pairs) and adds
+the Benjamini-Hochberg q column, which the manuscript's claim rested on but no artifact
+stored.
+
+| Pair | CMH OR | p | q (BH) |
+| --- | --- | --- | --- |
+| **probe L16 x probe L8** | **158.72** | <0.001 | **<0.001** |
+| refusal prime x SmoothLLM | 4.34 | 0.023 | 0.173 |
+| perplexity x refusal prime | 3.95 | 0.063 | 0.314 |
+| perplexity x probe L8 | 3.07 | 0.209 | 0.562 |
+| probe L16 x refusal prime | 0.72 | 0.943 | 0.943 |
+| probe L8 x SmoothLLM | 0.91 | 0.835 | 0.943 |
+
+**Two pairs clear the nominal level; only one survives correction** — the same-row probe
+pair, whose within-stratum odds ratio of 159 is an order of magnitude above its crude value.
+That is exactly what §"Is the correlation just behaviour difficulty?" already claims.
+
+Two cautions. The crude OR here is **uncorrected**, while `confound_check.json` and the paper
+apply a Haldane-Anscombe +0.5 correction: 17.400 against 16.059 for perplexity x probe L16.
+Do not mix the two conventions in one table. And the `survives` field in
+`confound_check.json` is raw-p based, so it flags two pairs; the paper's text correctly
+applies multiplicity correction and reports one.
+
+Including Llama Guard makes its six pairs degenerate here too — the odds ratio is infinite
+for all six and undefined for one — a third reason to report the 15-pair variant.
+
 ## Caveat this analysis inherits
 
 Breach vectors come from re-optimising the attack against each defense **separately**. Every
@@ -136,4 +167,5 @@ benign side, which is a reason to state this caveat plainly rather than to bury 
 | `fusion_diversity.csv`, `fusion_combination_rules.csv` | all 7 defenses |
 | `fusion_diversity_no_llamaguard.csv`, `fusion_combination_rules_no_llamaguard.csv` | 15-pair variant |
 | `fusion_results.tex`, `fusion_results_no_llamaguard.tex` | LaTeX tables + `\newcommand` macros |
+| `fusion_cmh_all_pairs.csv`, `fusion_cmh_all_pairs_no_llamaguard.csv` | CMH per pair with BH q |
 | `run_all7.log`, `run_no_llamaguard.log` | full console output of both runs |

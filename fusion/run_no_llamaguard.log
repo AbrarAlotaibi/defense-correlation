@@ -65,4 +65,24 @@ phi  0.99 -0.97  0.89  1.00
     3                token_anomaly, smoothllm, probe_b 0.23 0.28
     4 token_anomaly, smoothllm, probe_b, refusal_prime 0.20 0.45 
 
-wrote fusion_results_no_llamaguard.tex, fusion_diversity.csv, fusion_combination_rules.csv
+--- Cochran-Mantel-Haenszel, all pairs, stratified by difficulty ---
+(difficulty computed from the other defenses only, so it is
+ independent of the pair under test; q is Benjamini-Hochberg)
+           d1            d2  crude_OR  CMH_OR     p  n_strata  min_stratum     q
+        probe       probe_b    87.000 158.719 0.000         5           10 0.000
+refusal_prime     smoothllm    13.143   4.342 0.023         5           10 0.173
+   ppl_filter refusal_prime    15.725   3.947 0.063         5           10 0.314
+   ppl_filter     smoothllm    16.718   3.370 0.160         5           10 0.562
+   ppl_filter       probe_b    21.000   3.072 0.209         5           10 0.562
+   ppl_filter         probe    17.400   2.829 0.247         5            6 0.562
+      probe_b token_anomaly     7.000   2.610 0.262         5            8 0.562
+    smoothllm token_anomaly     4.750   1.786 0.395         5            5 0.741
+   ppl_filter token_anomaly     6.643   1.393 0.907         5            8 0.943
+refusal_prime token_anomaly     4.125   1.345 0.789         5            6 0.943
+        probe     smoothllm    10.400   1.256 0.939         5            8 0.943
+        probe token_anomaly     5.865   1.044 0.766         5            8 0.943
+      probe_b     smoothllm     8.250   0.915 0.835         5            7 0.943
+      probe_b refusal_prime     7.509   0.875 0.871         5            9 0.943
+        probe refusal_prime     7.667   0.718 0.943         5            7 0.943 
+
+wrote fusion_results_no_llamaguard.tex, fusion_diversity.csv, fusion_combination_rules.csv, fusion_cmh_all_pairs.csv
