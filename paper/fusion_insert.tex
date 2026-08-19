@@ -151,11 +151,20 @@ correlation matrix.
 \S\ref{sec:h3-note} reported that the assembled stack refuses $0.810$ of benign prompts
 against an independence prediction of $0.766$. The per-prompt refusal vectors let us
 decompose that. Pairwise $\phi$ on benign refusals is positive for all $21$ pairs, mean
-$0.573$, reaching $1.000$ for perplexity $\times$ probe$_{16}$, which refuse on an identical
-set of prompts. The benign side therefore carries the same positive dependence as the harmful
-side, and in consequence the \emph{empirical} union --- the fraction of benign prompts that
-at least one member refuses --- is only $0.520$, far below the $0.766$ that independence
-predicts.
+$0.573$, reaching $1.000$ for perplexity $\times$ probe$_{16}$. In consequence the
+\emph{empirical} union --- the fraction of benign prompts that at least one member refuses ---
+is only $0.520$, far below the $0.766$ that independence predicts.
+
+That dependence is almost entirely the base model's own refusal floor. Measured directly, the
+undefended model refuses $8$ of the $100$ benign prompts, and every one of the seven defended
+configurations refuses a superset of exactly those eight; perplexity and probe$_{16}$ refuse
+on precisely the floor and nothing else, which is why their $\phi$ is $1.000$. Recomputing on
+the $92$ non-floor prompts collapses the effect: eleven of the twenty-one pairs become
+degenerate because a member adds no refusal beyond the floor, and across the ten that remain
+the mean $\phi$ falls from $0.573$ to $0.056$, with four of ten positive. The benign side
+therefore does \emph{not} independently reproduce the harmful-side dependence; what it shows
+is a shared common cause, in the same way that difficulty stratification accounts for most of
+the cross-row breach correlation in \S\ref{sec:confound}.
 
 The deployed stack nonetheless refuses $0.810$, more than either quantity. No union over
 independently measured decisions can produce that value, and the gap is not noise: it is

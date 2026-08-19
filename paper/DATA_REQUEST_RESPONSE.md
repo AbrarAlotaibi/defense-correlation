@@ -90,14 +90,39 @@ Greedy continues to 6:
 > at its size-4 maximum. The row rule is not strictly optimal — it is capped by its own
 > taxonomy — and buys nothing after size 4 either (0.190 twice, FRR flat at 0.450).
 
-### B3. Undefended base-model refusal rate — **NOT AVAILABLE, needs one cheap pass**
+### B3. Undefended base-model refusal rate — **MEASURED: 0.080**
 
-There is no `stage04_undefended_benign.jsonl` in any run, on the cluster or locally. The
-undefended control was evaluated on the harmful split only. The "roughly 7 to 8%" in the text
-is not traceable to a stored artifact and I could not confirm it.
+Run on the cluster (job 2316052). The bare model refuses **8 of 100** benign prompts, so the
+text's "roughly 7 to 8%" is confirmed at the top of that range. Artifact:
+`results/hpc_vicuna_autodan/stage04_undefended_benign.jsonl`, refusal decided by the same
+`RefusalScorer` call every other FRR in the paper uses.
 
-This is the cheapest outstanding item: 100 benign prompts through the undefended model, greedy
-decode, no attack search — a few minutes on one H100. See "Ready to run" below.
+**The attributable burden is the number worth reporting, and for two defenses it is zero:**
+
+| Defense | raw FRR | attributable | shared with floor |
+| --- | --- | --- | --- |
+| refusal-prime | 0.390 | 0.337 | 0.080 |
+| Llama Guard | 0.260 | 0.196 | 0.080 |
+| SmoothLLM | 0.260 | 0.196 | 0.080 |
+| probe₈ | 0.090 | 0.011 | 0.080 |
+| token-anomaly | 0.090 | 0.011 | 0.080 |
+| **perplexity** | 0.080 | **0.000** | 0.080 |
+| **probe₁₆** | 0.080 | **0.000** | 0.080 |
+| stack | 0.810 | 0.793 | — |
+
+Attributable = refused by the deployed configuration on a prompt the bare model did *not*
+refuse, over the 92 non-floor prompts. Every one of the seven refuses a **superset of exactly
+the same 8 floor prompts**. Perplexity and probe₁₆ refuse on precisely the floor and nothing
+else: their entire reported false-refusal cost is the base model.
+
+> **This overturns a claim I made in the previous round.** I wrote that benign refusals carry
+> the same positive dependence as breaches (mean φ 0.573, 21/21 positive). The measurement was
+> right; the reading was not. Removing the 8 floor prompts collapses it — 11 of 21 pairs go
+> degenerate, and across the remaining 10 the mean φ falls to **0.056** with 4/10 positive.
+> The φ = 1.000 for perplexity × probe₁₆ is not a small-count artefact, it is the floor:
+> identical vectors. `fusion/README.md` §5 and `paper/fusion_insert.tex` are corrected.
+> The benign side shows a shared common cause, not a shared mechanism — the same shape the
+> CMH stratification gives on the harmful side.
 
 ### B4. Supplementary tables — delivered
 

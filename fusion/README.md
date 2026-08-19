@@ -105,9 +105,23 @@ Three quantities on the same 7 defenses and the same 100 benign prompts:
 | measured deployed stack | **0.810** |
 
 Pairwise φ on the benign refusal vectors is positive for **21 / 21** pairs, mean 0.573,
-range 0.272 to 1.000 (perplexity × probe L16 refuse on identical prompts, φ = 1.000). So the
-refusal side carries the same positive correlation the breach side does — which is why the
-empirical union, 0.520, falls well below the 0.766 independence prediction.
+range 0.272 to 1.000, which is why the empirical union, 0.520, falls well below the 0.766
+independence prediction.
+
+**That correlation is almost entirely the base model's own refusal floor, not shared defense
+behaviour.** B3 measured the undefended model on the same benign set: it refuses **8 of 100**
+prompts with no defense attached, and every one of the seven defended configurations refuses a
+**superset** of exactly those 8. Perplexity and probe L16 refuse on precisely the 8 floor
+prompts and nothing else, which is why their φ is exactly 1.000 — identical vectors, not a
+shared blind spot. Removing the 8 floor prompts and recomputing on the remaining 92 collapses
+the effect: 11 of the 21 pairs become degenerate because a member adds nothing beyond the
+floor, and across the 10 that remain measurable the mean φ falls from 0.573 to **0.056**, with
+only **4 of 10** still positive (range −0.075 to 0.460).
+
+So the honest statement is the reverse of the obvious reading: benign refusals look strongly
+correlated, but conditioning on the base model's floor removes nearly all of it. This mirrors
+what stratification does to the cross-row breach correlations — a shared common cause, not a
+shared mechanism.
 
 The measured stack nevertheless refuses *more* than either, 0.810. A union over
 independently-measured decisions cannot explain that: in the assembled stack the members run
