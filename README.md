@@ -51,6 +51,7 @@ Every figure in the paper traces to an artifact in `results/`. Nothing is re-der
 | Llama-2 replication (n = 50) | `results/hpc_llama2_autodan/` |
 | 3B pilot referenced for cross-target consistency | `results/primary_llama32_3b/` |
 | Figures | `paper/figures/*.pdf` with matching `*.csv` |
+| Classifier-fusion recast (Q, disagreement, double-fault, k-of-n, selection) | `fusion/` — see [fusion/README.md](fusion/README.md) |
 
 **Runs in `results/`**
 
@@ -96,6 +97,7 @@ configs/          base.yaml + one config per run
 data/             evaluation splits and the probe-training pool (regenerable by stage 00)
 results/          per-run artifacts, one directory per run
 paper/            results_insert.tex (drop-in Results section) and figures/
+fusion/           classifier-fusion recast of Table 6 (diversity measures, combination rules)
 tests/            CPU-only tests, including a guard that the judge never enters the attack loop
 ```
 
