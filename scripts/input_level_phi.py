@@ -154,6 +154,9 @@ def analyse(df, defenses=None):
         for s in shared:
             pi, (l3, h3), q1, q2 = phi_input(df, s, d1, d2)
             rec[f"phi_{s}"] = pi
+            # keep the interval: a shared-input phi resting on six or eight breach events
+            # is not interpretable without it, and these columns are the low-marginal ones.
+            rec[f"phi_{s}_lo"], rec[f"phi_{s}_hi"] = l3, h3
             rec[f"marg_{s}"] = np.nan if np.isnan(q1) else round((q1 + q2) / 2, 3)
         rows.append(rec)
     return pd.DataFrame(rows), shared
@@ -169,6 +172,15 @@ def selfcheck(df, published=None):
         out.append(dict(pair=f"{d1} x {d2}", recomputed=pb, published=val,
                         diff=np.nan if np.isnan(pb) else round(pb - val, 3)))
     return pd.DataFrame(out)
+
+
+def load_published(path):
+    """Published phi per pair, from a Table 6 CSV with d1, d2, phi columns."""
+    pub = pd.read_csv(path)
+    need = {"d1", "d2", "phi"}
+    if not need.issubset(pub.columns):
+        raise SystemExit(f"--published needs columns {sorted(need)}; got {list(pub.columns)}")
+    return {(r.d1, r.d2): float(r.phi) for r in pub.itertuples()}
 
 
 def write_tex(res, shared, path):
@@ -240,6 +252,12 @@ def main():
     ap.add_argument("--out", default="r3_results.tex")
     ap.add_argument("--boot", type=int, default=N_BOOT)
     ap.add_argument("--demo", action="store_true")
+    ap.add_argument("--published",
+                    help="Table 6 CSV (columns d1, d2, phi). Recomputes phi_behaviour from "
+                         "the assembled data and compares. Reported first; a mismatch aborts, "
+                         "since it means the assembly is wrong and everything downstream with "
+                         "it. Use --tolerate-selfcheck to downgrade that to a warning.")
+    ap.add_argument("--tolerate-selfcheck", action="store_true")
     a = ap.parse_args()
     globals()["N_BOOT"] = a.boot
 
@@ -253,6 +271,24 @@ def main():
         need = {"source", "defense", "behavior", "breach"}
         if not need.issubset(df.columns):
             ap.error(f"cross CSV needs columns {sorted(need)}; got {list(df.columns)}")
+
+    # The docstring promises this is reported first and loudly, so it is.
+    if a.published:
+        chk = selfcheck(df, load_published(a.published))
+        live = chk.dropna(subset=["recomputed"])
+        worst = float(live["diff"].abs().max()) if len(live) else np.nan
+        print("=== SELF-CHECK: phi_behaviour against the published values ===")
+        print(live.round(4).to_string(index=False))
+        print(f"pairs compared: {len(live)} of {len(chk)}; max |diff| = {worst:.2e}")
+        if not len(live) or worst > 5e-4:
+            msg = ("SELF-CHECK FAILED. The assembled data does not reproduce the published "
+                   "phi, so every number below is suspect.")
+            if not a.tolerate_selfcheck:
+                print(msg, file=sys.stderr)
+                return 2
+            print("WARNING: " + msg)
+        else:
+            print("self-check passed: the assembly reproduces the published table\n")
 
     print(f"sources  : {sorted(df.source.unique())}")
     print(f"defenses : {sorted(df.defense.unique())}")

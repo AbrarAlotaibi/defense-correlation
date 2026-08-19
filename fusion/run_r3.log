@@ -1,3 +1,29 @@
+=== SELF-CHECK: phi_behaviour against the published values ===
+                         pair  recomputed  published  diff
+              probe x probe_b      0.7527     0.7527  -0.0
+           ppl_filter x probe      0.5937     0.5937   0.0
+        probe x token_anomaly      0.3236     0.3236   0.0
+   ppl_filter x token_anomaly      0.3496     0.3496   0.0
+         ppl_filter x probe_b      0.6205     0.6205   0.0
+   ppl_filter x refusal_prime      0.5774     0.5774   0.0
+       ppl_filter x smoothllm      0.5659     0.5659  -0.0
+    refusal_prime x smoothllm      0.5570     0.5570   0.0
+            probe x smoothllm      0.4852     0.4852  -0.0
+          probe_b x smoothllm      0.4751     0.4751  -0.0
+      probe_b x refusal_prime      0.4583     0.4583   0.0
+        probe x refusal_prime      0.4463     0.4463   0.0
+      probe_b x token_anomaly      0.3852     0.3852  -0.0
+    smoothllm x token_anomaly      0.3407     0.3407   0.0
+refusal_prime x token_anomaly      0.2996     0.2996  -0.0
+   llamaguard x token_anomaly      0.1370     0.1370  -0.0
+       llamaguard x smoothllm      0.0928     0.0928  -0.0
+         llamaguard x probe_b      0.0821     0.0821  -0.0
+   llamaguard x refusal_prime      0.0821     0.0821  -0.0
+      llamaguard x ppl_filter      0.0721     0.0721   0.0
+           llamaguard x probe      0.0689     0.0689   0.0
+pairs compared: 21 of 21; max |diff| = 0.00e+00
+self-check passed: the assembly reproduces the published table
+
 sources  : ['adaptive:llamaguard', 'adaptive:ppl_filter', 'adaptive:probe', 'adaptive:probe_b', 'adaptive:refusal_prime', 'adaptive:smoothllm', 'adaptive:token_anomaly', 'static:plain', 'static:transfer']
 defenses : ['llamaguard', 'ppl_filter', 'probe', 'probe_b', 'refusal_prime', 'smoothllm', 'token_anomaly']
 behaviours: 100

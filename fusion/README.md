@@ -147,6 +147,52 @@ applies multiplicity correction and reports one.
 Including Llama Guard makes its six pairs degenerate here too — the odds ratio is infinite
 for all six and undefined for one — a third reason to report the 15-pair variant.
 
+### 7. Input-level vs behaviour-level phi (the estimand question)
+
+Eq. (9) is written over *inputs*; the measurement is indexed by *behaviour*, because the
+adaptive attack is re-optimised against each defense separately. `scripts/input_level_phi.py`
+separates the two, from a matrix built by `scripts/10_build_cross_breach.py`:
+
+```bash
+python scripts/10_build_cross_breach.py --run results/hpc_vicuna_autodan --out fusion/cross_breach.csv
+cd fusion && python ../scripts/input_level_phi.py --cross cross_breach.csv     --published ../results/hpc_vicuna_autodan/table6.csv --out r3_results.tex
+```
+
+Only **tier 0** is derivable from stored artifacts, and it is free. `dcorr/attacks/static.py`
+builds both static baselines from the behaviour and one run-wide suffix and never consults the
+defense, so those prompt sets are byte-identical across all seven defenses and give a genuine
+shared-input phi. The off-diagonal of the cross matrix does not exist — prompts optimised
+against d1 were never scored on d2 — so tiers 1 and 2 report as `--` rather than being guessed.
+
+| | plain set | transfer set |
+| --- | --- | --- |
+| measurable pairs | 15 | 10 |
+| same sign as phi_behaviour | **15 / 15** | **10 / 10** |
+| positive | **15 / 15** | **10 / 10** |
+| mean shift vs phi_behaviour | +0.144 | +0.101 |
+| intervals spanning zero | 5 | **0** |
+
+**The sign never flips**, so the composition conclusion holds under both estimands and the
+objection is a clarification rather than a threat. The behaviour-level figure the paper
+reports is the *conservative* one: holding the prompt fixed removes the adversary's freedom to
+build a different input per layer, which is the only thing that could decorrelate them.
+
+Power is the limit. Static marginals run 0.03 to 0.28 against 0.35 to 0.68 for the fluent
+adversary, so several plain-set pairs rest on six to eight breach events; the 1.00 for
+perplexity x token-anomaly means only that seven behaviours breached both filters. The
+transfer set is better powered and all ten of its intervals exclude zero.
+
+**Two bugs fixed in the supplied script** (`scripts/input_level_phi.py`):
+
+- `main()` never called `selfcheck()`, although the docstring says the check is "reported
+  first and loudly". It is now wired to `--published`, aborts with exit 2 on mismatch, and
+  `--tolerate-selfcheck` downgrades that to a warning. Both paths were tested against a
+  deliberately corrupted table. On the real data it passes: all 21 published phi values
+  reproduced to 0.00e+00.
+- `analyse()` computed bootstrap CIs for the shared-input columns and then discarded them.
+  They are now kept as `phi_<source>_lo/_hi`, which matters precisely because these are the
+  low-marginal columns.
+
 ## Caveat this analysis inherits
 
 Breach vectors come from re-optimising the attack against each defense **separately**. Every
@@ -168,4 +214,6 @@ benign side, which is a reason to state this caveat plainly rather than to bury 
 | `fusion_diversity_no_llamaguard.csv`, `fusion_combination_rules_no_llamaguard.csv` | 15-pair variant |
 | `fusion_results.tex`, `fusion_results_no_llamaguard.tex` | LaTeX tables + `\newcommand` macros |
 | `fusion_cmh_all_pairs.csv`, `fusion_cmh_all_pairs_no_llamaguard.csv` | CMH per pair with BH q |
-| `run_all7.log`, `run_no_llamaguard.log` | full console output of both runs |
+| `cross_breach.csv` | source x defense x behaviour breach matrix (tier 0) |
+| `r3_estimand_comparison.csv`, `r3_results.tex` | input- vs behaviour-level phi |
+| `run_all7.log`, `run_no_llamaguard.log`, `run_r3.log` | full console output of the runs |
