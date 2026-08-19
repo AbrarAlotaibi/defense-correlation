@@ -4,13 +4,13 @@ defenses: ['ppl_filter', 'probe', 'probe_b', 'refusal_prime', 'smoothllm', 'toke
 behaviours: 100   benign prompts: 100
 
 --- single layers (marginal) ---
-                ASR  FRR
-token_anomaly  0.35  0.0
-smoothllm      0.54  0.0
-refusal_prime  0.60  0.0
-probe_b        0.60  0.0
-ppl_filter     0.66  0.0
-probe          0.68  0.0 
+                ASR   FRR
+token_anomaly  0.35  0.09
+smoothllm      0.54  0.26
+refusal_prime  0.60  0.39
+probe_b        0.60  0.09
+ppl_filter     0.66  0.08
+probe          0.68  0.08 
 
 --- pairwise diversity: 15 measurable pairs, 0 degenerate ---
            d1            d2     Q  dis   DF  DF_indep   phi
@@ -42,27 +42,27 @@ phi  0.99 -0.97  0.89  1.00
 
 --- combination rules (k-of-n over all defenses) ---
  k  n  ASR  FRR
- 1  6 0.19  0.0
- 2  6 0.43  0.0
- 3  6 0.59  0.0
- 4  6 0.68  0.0
- 5  6 0.75  0.0
- 6  6 0.79  0.0 
+ 1  6 0.19 0.45
+ 2  6 0.43 0.22
+ 3  6 0.59 0.08
+ 4  6 0.68 0.08
+ 5  6 0.75 0.08
+ 6  6 0.79 0.08 
 
 --- diversity-greedy selection ---
  size                                                             members  ASR  FRR
-    1                                                       token_anomaly 0.35  0.0
-    2                                            token_anomaly, smoothllm 0.27  0.0
-    3                                   token_anomaly, smoothllm, probe_b 0.23  0.0
-    4                    token_anomaly, smoothllm, probe_b, refusal_prime 0.20  0.0
-    5             token_anomaly, smoothllm, probe_b, refusal_prime, probe 0.19  0.0
-    6 token_anomaly, smoothllm, probe_b, refusal_prime, probe, ppl_filter 0.19  0.0 
+    1                                                       token_anomaly 0.35 0.09
+    2                                            token_anomaly, smoothllm 0.27 0.27
+    3                                   token_anomaly, smoothllm, probe_b 0.23 0.28
+    4                    token_anomaly, smoothllm, probe_b, refusal_prime 0.20 0.45
+    5             token_anomaly, smoothllm, probe_b, refusal_prime, probe 0.19 0.45
+    6 token_anomaly, smoothllm, probe_b, refusal_prime, probe, ppl_filter 0.19 0.45 
 
 --- row-based selection (composition rule 2) ---
  size                                          members  ASR  FRR
-    1                                    token_anomaly 0.35  0.0
-    2                         token_anomaly, smoothllm 0.27  0.0
-    3                token_anomaly, smoothllm, probe_b 0.23  0.0
-    4 token_anomaly, smoothllm, probe_b, refusal_prime 0.20  0.0 
+    1                                    token_anomaly 0.35 0.09
+    2                         token_anomaly, smoothllm 0.27 0.27
+    3                token_anomaly, smoothllm, probe_b 0.23 0.28
+    4 token_anomaly, smoothllm, probe_b, refusal_prime 0.20 0.45 
 
 wrote fusion_results_no_llamaguard.tex, fusion_diversity.csv, fusion_combination_rules.csv
