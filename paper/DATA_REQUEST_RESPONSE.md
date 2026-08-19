@@ -254,6 +254,62 @@ Two bugs in the supplied script were fixed to get here — `main()` never called
 and `analyse()` computed the shared-column intervals then discarded them. Both are documented
 in `fusion/README.md` §7.
 
+### D3. External benign calibration — **DONE**, and it is the sharpest result in this batch
+
+Job 2316054. Corpus choice was forced, not free:
+
+- `data/eval_benign.jsonl` (100, jbb_benign) is the in-sample set — the problem itself.
+- **XSTest is already in this repo** as the benign half of `data/probe_train.jsonl` (250 rows).
+  Calibrating the probe on it would be leakage: those are its training examples.
+- **AlpacaEval** (805 general instructions) is seen by neither. It is also 8× the evaluation
+  set, so the 1% quantile rests on **8 prompts rather than 1** — which is the identifiability
+  half of M4.
+
+Deduplicated against both the eval benign set and the probe training pool at the same
+Jaccard 0.6 the probe audit uses: **805 kept, 0 dropped**, max Jaccard 0.5
+(`data/external_benign_report.json`). Thresholds are written to `calibration_external.json`,
+deliberately *not* `calibration.json`, so nothing downstream silently picks them up and the
+reported runs stay reproducible.
+
+| Filter | in-sample thr | external thr | held-out block rate (in-sample thr → external thr) |
+| --- | --- | --- | --- |
+| perplexity | 4.849 | 6.516 | 0.010 → **0.000** |
+| token-anomaly | 0.273 | 0.523 | 0.010 → **0.000** |
+| **probe₁₆** | 28.924 | **−5.210** | 0.010 → **0.260** |
+| probe₈ | 110.768 | 100.593 | 0.010 → **0.070** |
+
+**The two surface filters barely move, and move in the permissive direction.** AlpacaEval
+prompts are slightly higher-perplexity than JBB benign (p50 3.49 vs 3.04), so an external
+threshold is looser and blocks nothing on the held-out set. Those filters are largely
+distribution-insensitive.
+
+**The probes move enormously, and in the punitive direction.** Median probe₁₆ score is −70.3
+on AlpacaEval against −31.2 on JBB benign; for probe₈ it is −33.8 against +44.6. JBB benign
+prompts sit far closer to the harmful side of the probe's decision boundary than ordinary
+instructions do. Calibrated on generic traffic, probe₁₆ would refuse **26% of the held-out
+benign set** rather than 1%.
+
+> **This empirically confirms the suspicion your own Limitations section already raises** —
+> that the probe's near-ceiling validation AUROC "may reflect topical separability between the
+> harmful and benign corpora as much as a representation of harmfulness". JBB benign prompts
+> are matched counterparts to the harmful behaviours and are therefore topically adjacent to
+> them; AlpacaEval prompts are not. The probe is substantially tracking that adjacency.
+>
+> The consequence for the paper is specific and worth stating plainly: **the probe's 1%
+> operating point is an artefact of calibrating on JBB benign.** It is not a property of the
+> defense that transfers to deployment traffic. The surface filters do not have this problem.
+>
+> This does not invalidate any reported number — every result is correctly labelled as using
+> in-sample thresholds — but it converts "thresholds are in-sample, so the block rates are
+> optimistic by an unknown margin" into a measured margin, and shows the margin is
+> concentrated almost entirely in one row of Table 6.
+
+**What this does not give you.** New thresholds change which prompts are blocked, which
+changes breach outcomes, so the marginal ASRs and every φ would have to be re-derived from a
+re-run. That is D4-scale compute and was not done. The numbers above are the calibration and
+false-refusal side only.
+
+
 ### D2–D5 — not run
 
 These need GPU jobs. Nothing about them is derivable from stored artifacts, and I have not
@@ -263,7 +319,7 @@ started any of them.
 | --- | --- | --- |
 | **B3** undefended benign refusal | ~100 generations, minutes | ready, see below |
 | **D2** direct attack on the six-layer stack | one run | ready, see below |
-| **D3** external benign calibration | no attack search, one scoring pass | needs a corpus choice |
+| **D3** external benign calibration | no attack search, one scoring pass | **DONE** — see below |
 | **D4** seeds ×2 | ~2× the primary run | expensive |
 | **D5** tier-2 cross-evaluation | ~4,200 generations | only if D1 were ambiguous — it is not |
 
@@ -288,8 +344,24 @@ GPU spend first.
 
 ## E. Not data
 
-- **Five bibliography entries: not done.** I did not fetch them, and I will not guess author
-  lists. Say the word and I will pull the BibTeX from arXiv.
+- **Five bibliography entries: done** — `paper/references_added.bib`. Metadata pulled from
+  the arXiv API rather than transcribed, so titles, full author lists and years are as arXiv
+  reports them:
+
+  | Key | arXiv | Authors |
+  | --- | --- | --- |
+  | `dualbreach2025` | 2504.18564 | 8 |
+  | `attackermovessecond2025` | 2510.09023 | 14 |
+  | `operationalizingthreat2024` | 2407.14937 | 10 |
+  | `aegis2024` | 2404.05993 | 4 |
+  | `r2guard2024` | 2407.05557 | 2 |
+
+  Two notes. AEGIS resolved to *Online Adaptive AI Content Safety Moderation with Ensemble of
+  LLM Experts* (2404.05993) — confirm that is the AEGIS you meant, since the acronym is reused.
+  R²-Guard is entered as an ICLR 2025 `@inproceedings` with the arXiv id in `note`; **verify
+  the page numbers against the proceedings before camera-ready**, as the API gives only the
+  preprint. Two titles had an acronym de-title-cased where the arXiv feed had mangled it
+  (`Llm` → `LLM`); the change is flagged inline in the .bib.
 - **Repository:** public and resolving — `isPrivate: false`, confirmed via `gh`. It contains
   the run artifacts, configs, code, and both paper inserts. The StrongREJECT prompt is at
   `dcorr/judge/strongreject_prompt.txt` and is SHA-256 pinned and verified at load.
