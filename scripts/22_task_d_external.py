@@ -36,7 +36,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+# scripts/ for fusion_analysis, repo root for dcorr
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from fusion_analysis import cmh_all_pairs  # noqa: E402
 
 SEED = 20260727
@@ -196,12 +198,40 @@ def main() -> int:
                         fmt_p(r.p), fmt_p(getattr(r, "q", float("nan")))])
 
     # ---- the question this run exists to answer ----------------------------------------
+    # A CMH odds ratio of 0 is NOT evidence of no association: it means every stratum has an
+    # empty concordant cell (a*d = 0 throughout), so the numerator vanishes and the statistic
+    # is undefined rather than small. Detect that explicitly, because reporting it as a
+    # refutation would be wrong in the same way the Llama Guard degeneracy would be.
+    def informative_strata(d1, d2):
+        others = [d for d in live if d not in (d1, d2)]
+        diff = B_ext[others].to_numpy().sum(axis=1)
+        x, y = B_ext[d1].to_numpy(), B_ext[d2].to_numpy()
+        n = 0
+        for s in np.unique(diff):
+            m = diff == s
+            if m.sum() < 2:
+                continue
+            if ((x[m] == 1) & (y[m] == 1)).sum() * ((x[m] == 0) & (y[m] == 0)).sum() > 0:
+                n += 1
+        return n
+
+    degenerate = {f"{PRETTY[d1]} x {PRETTY[d2]}": informative_strata(d1, d2)
+                  for d1, d2 in pairs if informative_strata(d1, d2) == 0}
+
     key = cmh[((cmh.d1 == "probe") & (cmh.d2 == "probe_b")) |
               ((cmh.d1 == "probe_b") & (cmh.d2 == "probe"))]
-    survives = bool(len(key)) and float(key.iloc[0].q) < 0.05 if len(key) else False
+    probe_strata = informative_strata("probe", "probe_b")
+    if probe_strata == 0:
+        survives = "UNDEFINED - every difficulty stratum is saturated, so the CMH numerator " \
+                   "is identically zero. This is not a refutation; the test cannot be " \
+                   "computed for this pair under these thresholds."
+    else:
+        survives = bool(len(key)) and float(key.iloc[0].q) < 0.05
     n_surv = int((cmh["q"] < 0.05).sum()) if "q" in cmh else 0
     verdict = {
         "probe16_x_probe8_survives_BH_under_external_thresholds": survives,
+        "probe16_x_probe8_informative_strata": probe_strata,
+        "pairs_with_undefined_CMH": degenerate,
         "probe16_x_probe8_CMH_OR": float(key.iloc[0].CMH_OR) if len(key) else None,
         "probe16_x_probe8_q": float(key.iloc[0].q) if len(key) else None,
         "n_pairs_surviving_BH": n_surv,
