@@ -72,8 +72,11 @@ jd = json.load(open(M + 'judge_determinism.json'))
 assert jd['overall']['verdict_disagreements'] == 19 and jd['n_rows'] == 300
 want("$19$ of them ($6.3\\%$)", "judge determinism rate", 'results_insert.tex')
 want("$0.58$ to $0.64$", "judge determinism ASR swing", 'results_insert.tex')
-forbid("$66$ of $2700$", "C4 stale denominator", 'results_insert.tex')
-want("$1885$ responses", "C4 corrected denominator", 'results_insert.tex')
+# The manuscript's 2.4% of 2700 is CORRECT; an earlier "correction" here was not.
+# gold.jsonl has 2700 rows of which 1887 were judged, so both denominators must appear.
+want("$66$ of the $2700$ graded", "C4 manuscript figure retained", 'results_insert.tex')
+want("$1887$ responses", "C4 judged-only denominator", 'results_insert.tex')
+forbid("$1885$ responses", "C4 stale judged count", 'results_insert.tex')
 
 # --- D3 -------------------------------------------------------------------------------
 ce = json.load(open(R + 'calibration_external.json'))
