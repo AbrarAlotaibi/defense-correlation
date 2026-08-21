@@ -49,7 +49,7 @@ other six rows. Source: `fusion/manuscript/A1_B4a_cmh_15pairs.csv`.
 
 ---
 
-## B. Table completion — delivered, except B3
+## B. Table completion — delivered
 
 ### B1. k-of-n curve, complete
 
@@ -438,15 +438,62 @@ GPU spend first.
 
 ---
 
-## Summary of what changes in the manuscript
+## State of the three inserts — READ THIS FIRST
 
-Three corrections, in descending order of consequence:
+**The edits below are already applied to the `.tex` files. Do not re-apply them.** All three
+inserts are self-consistent with the artifacts; `scripts/17_audit_inserts.py` re-checks every
+asserted number against the CSV that produced it (38 assertions, currently passing). Re-run it
+after any edit.
 
-1. **H1's interpretation must be narrowed** (A1). The pre-registered same-row pair does not
-   survive stratification; only the exploratory probe pair does.
-2. **The judge parse-failure denominator is wrong** (C4). 2700 is not a count in that run.
-3. **"Agree at every stack size" must be bounded to sizes 1–4** (B2), because row-based has no
-   size 5.
+| Insert | Status |
+| --- | --- |
+| `paper/results_insert.tex` | updated — 8 edits |
+| `paper/fusion_insert.tex` | updated — 4 edits |
+| `paper/estimand_insert.tex` | current as written |
+| `paper/references_added.bib` | 5 entries, from the arXiv API |
 
-And one gap: **B3 has no artifact behind it**, so the "roughly 7 to 8%" base-model refusal
-figure is currently unsupported.
+### Substantive changes already made to the prose
+
+1. **H1 is narrowed.** The pre-registered same-row pair does not survive stratification (CMH
+   OR 1.39, p 0.91); only the exploratory probe pair does. The text now says the
+   mechanism-specific reading rests on a single post-hoc pair and is suggestive, not
+   confirmed. The confound table gained the missing perplexity × token-anomaly row.
+2. **The intersection estimate is no longer called a faithful proxy.** With Llama Guard
+   removed, intersection predicts 0.190 and a direct attack yields 0.000. The text now bounds
+   the claim by the attack budget rather than asserting the stack is unbreakable.
+3. **The judging denominator is corrected** — 66 of 1885 judged (3.5%), not 66 of 2700, which
+   is not a count that exists in that run.
+4. **A judge-reproducibility paragraph is added** — 6.3% verdict disagreement on re-judging
+   identical responses, and an explicit warning that no reported interval covers grader
+   variance.
+5. **H3 reports the measured floor** (8/100) and the attributable burden, including 0.000 for
+   perplexity and probe₁₆.
+6. **The in-sample threshold caveat is now a measured margin** — probe₁₆ would refuse 26% of
+   the held-out benign set at an external threshold.
+7. **The k-of-n table is complete** (k=5, k=6) and the flat false-refusal tail is explained.
+8. **"Agree at every stack size" is bounded** to the four sizes the row rule admits, with the
+   structural reason given.
+
+### What still needs a human
+
+- **Integration.** The inserts are drop-in sections, not a merged manuscript. `fusion_insert.tex`
+  cross-references `\S\ref{sec:h3-note}` in `results_insert.tex`, so either both land in the
+  same document or that reference needs repointing. `eq:joint`, `sec:composition` and
+  `tab:corrmeasure` live in the main body, not in any insert.
+- **One bib entry is not in the .bib**: `kuncheva2003measures`. The BibTeX is in the header
+  comment of `fusion_insert.tex`.
+- **Two references need confirming**: AEGIS resolved to arXiv 2404.05993 (the acronym is
+  reused elsewhere), and R²-Guard is entered as ICLR 2025 with preprint metadata only — verify
+  page numbers against the proceedings.
+- **Compile against the real class file.** Environments balance and tabular column counts are
+  correct, but that is not the same as a successful build.
+- **Elsevier package**: Highlights, CRediT statement, generative-AI declaration. Not started.
+
+### What was deliberately not done
+
+- **D4 (seed replicates)** — skipped by decision. The single-seed limitation is already stated
+  accurately in Limitations and should stay.
+- **D5 (tier-2 cross-evaluation)** — unnecessary: D1's sign agreement was unambiguous (15/15
+  and 10/10), which was the stated decision rule.
+- **Re-deriving ASRs under the external thresholds** (D3) — that needs a full re-run, so the
+  external-calibration result covers the calibration and false-refusal side only.
