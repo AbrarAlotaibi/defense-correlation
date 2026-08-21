@@ -83,6 +83,60 @@ caveat warns about.
 So the caveat is now empirically grounded rather than precautionary, and it should be restated
 with this number attached rather than removed.
 
+## Follow-up: what changes when the downstream analyses are re-derived
+
+Task B's marginal shifts are not cosmetic. Re-running the fusion analyses on majority-vote
+labels (`fusion/breach_majority.csv`, produced from `gold_multi.jsonl`; the benign side is
+untouched because refusals are scored by `RefusalScorer`, not the gold judge) changes two
+conclusions the manuscript currently states.
+
+### 1. The row heuristic no longer matches the greedy search
+
+Under single-judgment labels the two procedures selected identical members in identical order
+at every size the row rule admits. **Under majority labels they diverge from size 3.**
+
+| Size | row-based (rule 2) | diversity-greedy |
+| --- | --- | --- |
+| 1 | token-anomaly — 0.34 / 0.09 | token-anomaly — 0.34 / 0.09 |
+| 2 | + SmoothLLM — 0.28 / 0.27 | + SmoothLLM — 0.28 / 0.27 |
+| 3 | + **probe₁₆** — 0.26 / 0.27 | + **perplexity** — 0.26 / 0.27 |
+| 4 | + refusal-prime — 0.25 / **0.44** | + probe₈ — 0.25 / **0.28** |
+
+The cause is the marginal inversion: rule 2 takes the strongest member of each row by marginal
+ASR, and under majority labels probe₁₆ (0.64) overtakes probe₈ (0.67), so the row rule now
+picks the other probe. At size 4 both reach ASR 0.25, but greedy does it at **0.28 false
+refusal against the row rule's 0.44**.
+
+So the claim that the taxonomy costs nothing against a search with full access to the joint
+data holds under one labelling and not the other. The honest statement is that the two agreed
+on the labels originally reported and diverge on the better-estimated ones, with the row rule
+paying ~16 points of false refusal for the same attack success at size 4.
+
+### 2. Difficulty stratification: one surviving pair becomes three
+
+| | single judgment | majority of 5 |
+| --- | --- | --- |
+| pairs surviving BH (q < 0.05) | **1** | **3** |
+| probe₁₆ × probe₈ | OR 158.7, q < 0.001 | OR **11.76**, q = 0.0006 |
+| refusal-prime × SmoothLLM | not significant | OR **10.81**, q = 0.0007 |
+| perplexity × probe₁₆ | not significant | OR **10.10**, q = 0.0111 |
+
+This cuts both ways and the manuscript should say so rather than pick the convenient half.
+
+**For H1:** the same-row probe pair still survives stratification, so the mechanism-specific
+reading is not an artefact of one judgment draw. But its common odds ratio falls from 158.7 to
+11.76 — still decisive, no longer an order of magnitude above every alternative. The published
+158.7 was inflated by a favourable labelling.
+
+**Against the clean H1/H2 split:** two *cross-row* pairs now also survive. The manuscript's
+interpretation — that cross-row correlation is predominantly a shared difficulty gradient
+rather than shared mechanism — is weakened. Under the better-estimated labels, 2 of the 13
+cross-row pairs retain a mechanism-specific association after difficulty is held fixed.
+
+Neither the H1 verdict nor the composition conclusion changes. What changes is the sharpness
+of the same-row/cross-row contrast, which is currently drawn more starkly than the labels
+support.
+
 ## Files
 
 | File | Contents |
@@ -91,6 +145,8 @@ with this number attached rather than removed.
 | `B4_grader_intervals.csv` | φ and Δ with grader-only intervals |
 | `B5_agreement.txt` | unanimity and 3–2 split rates |
 | `meta.json` | seed, prompt digest, majority-vote marginals, undefended ASR |
+| `../breach_majority.csv` | per-behaviour breach under majority vote |
+| `../fusion_*_majority.csv` | diversity, combination rules and CMH re-derived on those labels |
 
 `φ/φ_max` is included because raw φ understates how tight these pairs are: the marginals cap
 the attainable value. probe₁₆ × probe₈ reaches **0.811 of its maximum**, and
