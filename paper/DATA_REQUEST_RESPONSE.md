@@ -216,18 +216,28 @@ checked. Probe pool: 520 train / 130 val, dedup at Jaccard 0.6, val AUROC 1.0.
 > Also: `promptguard` appears in `stack.order` but is `enabled: false` in every reported run.
 > It is not one of the seven and should not appear in any table.
 
-### C4. Judge parse failures — **the reported denominator is wrong**
+### C4. Judge parse failures — **the manuscript figure is correct; an earlier note here was not**
 
-| Run | rows | judged | unparsed | % of judged |
-| --- | --- | --- | --- | --- |
-| primary (`hpc_vicuna_autodan`) | 2400 | 1885 | 66 | **3.50%** |
-| pilot (`primary_llama32_3b`) | 2100 | 1379 | 1 | 0.07% |
+| Run | rows | judged | unparsed | % of rows | % of judged |
+| --- | --- | --- | --- | --- | --- |
+| primary (`hpc_vicuna_autodan`) | 2700 | 1887 | 66 | **2.4%** | 3.50% |
+| pilot (`primary_llama32_3b`) | 2100 | 1379 | 1 | 0.05% | 0.07% |
 
-The numerator 66 is right. **2700 is not a count that exists in the primary run** — it has
-2400 rows, of which 1885 were actually sent to the judge (blocked inputs are never judged, so
-they cannot fail to parse). The defensible figure is **66 of 1885 = 3.50% of judged
-responses**; 66/2400 = 2.75% if you prefer the all-rows denominator. Either way, 2.4% of 2700
-should not stand.
+> **Correction to an earlier version of this document.** I previously reported that 2700 was
+> not a count in that run and that the manuscript's 2.4% should be replaced. That was wrong,
+> and it was my error: I was working from a stale local copy of `gold.jsonl` containing 2400
+> rows, pulled before the 300 assembled-stack rows were judged. The cluster's file has 2700
+> rows and the manuscript's **2.4% (66 of 2700) is correct as written**.
+>
+> The stale copy was a strict subset of the complete one with **zero** differing verdicts, so
+> no other analysis in this document is affected — every number elsewhere uses per-defense or
+> undefended rows, which are identical in both files. `results_insert.tex` has been reverted.
+
+Both denominators are defensible and the manuscript may keep either. 66/2700 = 2.4% counts
+every graded row; 66/1887 = 3.5% counts only responses actually sent to the grader, since
+blocked inputs are never judged and so cannot fail to parse. The manuscript's stated judged
+count of 1885 is 1887 by direct count — a two-row difference not worth changing unless you
+are quoting it precisely.
 
 The Llama-2 replication's `gold.jsonl` is now in the repo, but its judged rows carry no
 `parse_ok` failures to report separately — I have given the pilot instead, and flag that as
@@ -461,8 +471,10 @@ after any edit.
 2. **The intersection estimate is no longer called a faithful proxy.** With Llama Guard
    removed, intersection predicts 0.190 and a direct attack yields 0.000. The text now bounds
    the claim by the attack budget rather than asserting the stack is unbreakable.
-3. **The judging denominator is corrected** — 66 of 1885 judged (3.5%), not 66 of 2700, which
-   is not a count that exists in that run.
+3. **The judging denominator was re-verified and left as the manuscript had it** — 66 of
+   2700 (2.4%) is correct; an earlier claim in this document that it was wrong came from a
+   stale local file and has been retracted. The insert now also gives 3.5% as the
+   judged-only rate.
 4. **A judge-reproducibility paragraph is added** — 6.3% verdict disagreement on re-judging
    identical responses, and an explicit warning that no reported interval covers grader
    variance.

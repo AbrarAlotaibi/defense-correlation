@@ -402,10 +402,11 @@ of the calibration corpus rather than a transferable property --- direct evidenc
 topical-separability concern raised above --- while the perplexity and token-anomaly filters
 do not share the problem.
 \textbf{Judging.} Breach is scored by a single automated rubric grader at the standard
-binarisation threshold, without human adjudication on this corpus. Of the $1885$ responses
-actually sent to the grader --- blocked inputs are never judged --- $66$, or $3.5\%$, did not
-parse into the rubric format and are counted as non-breach, so the reported ASRs are very
-slightly conservative.
+binarisation threshold, without human adjudication on this corpus. $66$ of the $2700$ graded
+rows ($2.4\%$) did not parse into the rubric format and are counted as non-breach, so the
+reported ASRs are very slightly conservative. Relative to the $1887$ responses actually sent
+to the grader --- blocked inputs are never judged, so they cannot fail to parse --- the rate
+is $3.5\%$, which is the tighter denominator of the two.
 
 \textbf{Judge reproducibility.} The grader is not deterministic, and the reported intervals do
 not cover it. Re-judging an identical set of $300$ undefended responses with the same rubric,
