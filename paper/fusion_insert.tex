@@ -183,11 +183,16 @@ the error depends on a modelling choice they may not realise they are making.
 
 \textbf{Combination rules beyond the veto.} The breach vectors underlying
 Table~\ref{tab:combrules} come from re-optimising the attack against each defense
-\emph{separately}. Every $k>1$ row therefore rests on the same intersection assumption used
-for the pairwise analysis, which we validated by direct attack at $k=1$ only (intersection
-predicts $0.010$, the direct attack yields $0.000$, agreement $99/100$). Those rows are
-estimates, not measurements, and an adversary optimising against a $k$-of-$n$ rule directly
-would face a different objective. The refusal decomposition of \S\ref{sec:fusion} shows the
+\emph{separately}, so every $k>1$ row rests on an intersection assumption. That assumption is
+now known to be wrong in the one place it can be checked with resolution. The check reported
+in \S\ref{sec:corr-measure} compares a predicted $0.010$ against a measured $0.000$, but both
+lie on the floor, where any method returning near-zero agrees. Removing Llama~Guard leaves six
+defenses whose intersection predicts a residual of $0.190$; a direct adaptive attack on that
+assembled six-layer stack yields $0.000$, with the attack failing to find a prompt satisfying
+all six input constraints on $100/100$ behaviours. The intersection therefore \emph{overstates}
+attacker success against a real stack, by $0.19$ at the only operating point where the
+comparison is informative. The $k>1$ rows should be read as estimates that this direct check
+contradicts in the conservative direction, not as measurements. The refusal decomposition of \S\ref{sec:fusion} shows the
 assumption is measurably imperfect on the benign side, where the deployed stack departs from
 the union of its members by $0.29$; we have no reason to assume it is exact on the harmful
 side merely because it held at $k=1$.

@@ -310,18 +310,87 @@ re-run. That is D4-scale compute and was not done. The numbers above are the cal
 false-refusal side only.
 
 
-### D2–D5 — not run
+### D2. Intersection versus direct, with resolution — **DONE, and the assumption fails**
+
+Job 2316052, `COMPLETED` in 3:41:20, 100/100 behaviours, no fatal errors. Judged post hoc on
+the login node (600 verdicts). Artifact: `fusion/manuscript/D2_intersection_vs_direct.json`.
+
+| | |
+| --- | --- |
+| predicted intersection residual (six defenses) | **0.190** |
+| measured direct residual on the assembled stack | **0.000** |
+| difference | **−0.190** |
+| per-behaviour agreement | 81/100 |
+| predicted-breach-only / measured-breach-only | 19 / 0 |
+
+**The intersection assumption does not hold, and the earlier "validation" was an artefact of
+the floor.** In the primary run the check compared a predicted 0.010 against a measured 0.000
+and agreed — but both sat on the floor, where any method returning near-zero would pass.
+Removing Llama Guard gives the check resolution, and it fails: the intersection over
+per-defense breach vectors predicts 19 breaches where a direct attack produces none.
+
+**The mechanism is joint infeasibility, not the stack catching successful attacks.** Every one
+of the 100 adaptive attempts was blocked at the *input* stage, and the attack reports
+`found_feasible: False` for **100/100** behaviours. The search never located a prompt
+satisfying all six input constraints at once. Optimising against each layer separately and
+intersecting the results implicitly assumes a prompt that defeats layer A also survives layer
+B when both are present; the joint feasible region turns out to be far smaller than that.
+
+> **What this costs the paper.** The k > 1 rows of the combination-rules table are built from
+> the same intersection assumption that has now been contradicted at k = 1 by 0.19. They
+> should be labelled not merely as estimates but as estimates the one direct check with
+> resolution *disagrees with*, in the direction of overstating attacker success. The honest
+> version of the earlier caveat is stronger than what I wrote last round.
+
+**The caveat that keeps this from being over-claimed.** `found_feasible: False` is a statement
+about the search, not a proof that the feasible region is empty. The budget here is the same
+one that succeeds easily per-layer (30 generations × 24 population, `max_filter_rejections`
+40), so the comparison is fair, but a stronger or differently-shaped attacker could still find
+joint solutions. The defensible claim is: *under an attack budget sufficient to produce a 0.19
+per-layer intersection residual, a direct attack on the assembled six-layer stack finds no
+feasible prompt on any of 100 behaviours.* Not: *the stack is unbreakable.*
+
+The undefended control in the same run behaves as expected (64/100 adaptive breaches), so the
+attack works when unconstrained — the zero is about the constraints, not a broken pipeline.
+
+### Incidental: the gold judge is not deterministic — **6.3% verdict disagreement**
+
+The D2 run was seeded with a copy of the primary run's `stage04_undefended.jsonl`, so stage 06
+judged the **same 300 undefended responses a second time** — same rubric, same model, same
+temperature 0, same threshold. That accidental replicate measures something no planned part of
+the study does.
+
+| Attack | ASR run 1 | ASR run 2 | verdict disagreements |
+| --- | --- | --- | --- |
+| adaptive | 0.58 | **0.64** | 10 (10%) |
+| static_gcg | 0.27 | 0.26 | 5 (5%) |
+| static_plain | 0.06 | 0.10 | 4 (4%) |
+| **overall** | | | **19/300 = 6.3%** |
+
+Only **1** of the 19 involves a parse failure, so this is not the unparsed-output problem — it
+is the grader returning different rubric scores for identical text.
+
+> **This is a floor on the precision of every ASR in the paper, and no reported interval
+> contains it.** The bootstrap resamples behaviours; it says nothing about the grader. The
+> headline undefended adaptive ASR moves 0.58 → 0.64 on a pure re-judge. Recommended: state
+> the re-judge disagreement rate in Limitations alongside the existing 2.4%-unparsed note, and
+> avoid presenting any ASR difference smaller than a few points as meaningful. Correlations
+> should be more robust than levels — φ is relational and both members shift together — but
+> that is an argument, not a measurement, and I have not tested it.
+>
+> Artifact: `fusion/manuscript/judge_determinism.json`, regenerate with
+> `scripts/16_judge_determinism.py`.
+
+
+### D4–D5 — not run
 
 These need GPU jobs. Nothing about them is derivable from stored artifacts, and I have not
 started any of them.
 
 | Item | Cost | Status |
 | --- | --- | --- |
-| **B3** undefended benign refusal | ~100 generations, minutes | ready, see below |
-| **D2** direct attack on the six-layer stack | one run | ready, see below |
-| **D3** external benign calibration | no attack search, one scoring pass | **DONE** — see below |
-| **D4** seeds ×2 | ~2× the primary run | expensive |
-| **D5** tier-2 cross-evaluation | ~4,200 generations | only if D1 were ambiguous — it is not |
+| **D4** seeds ×2 | ~2× the primary run | **skipped by decision** |
+| **D5** tier-2 cross-evaluation | ~4,200 generations | **not needed** — D1's signs were unambiguous |
 
 **D5 is not needed.** D1's signs are unambiguous (15/15 and 10/10), which was the stated
 decision rule.
