@@ -2,6 +2,7 @@
 #SBATCH --job-name=dcorr_D
 #SBATCH --partition=gpu_x450
 #SBATCH --gres=gpu:h100:1
+#SBATCH --exclude=gpu0001
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=96G
 #SBATCH --time=36:00:00
@@ -38,7 +39,11 @@ SRC=results/hpc_vicuna_autodan
 DST=results/hpc_vicuna_autodan_extthr
 
 echo "node: $(hostname)  python: $PY"
-nvidia-smi --query-gpu=name,memory.total,memory.used --format=csv,noheader || true
+echo "CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-unset}"
+# Query only the device Slurm gave us. Listing every GPU on the node is misleading: a
+# neighbouring job's memory shows up and looks like our own.
+nvidia-smi --query-gpu=index,name,memory.total,memory.used --format=csv,noheader \
+  -i "${CUDA_VISIBLE_DEVICES:-0}" || nvidia-smi --query-gpu=index,memory.used --format=csv,noheader || true
 
 # --- install the EXTERNAL thresholds as this run's calibration.json --------------------
 # Written in the schema stage 04/05 expect, so _merge_calibration picks them up unchanged.
@@ -84,5 +89,9 @@ echo "[D] stage05 exit=$s5"
 
 echo ""
 echo "stage04=$s4 stage05=$s5"
+if [ "$s4" -ne 0 ] || [ "$s5" -ne 0 ]; then
+  echo "[D][FAIL] a GPU stage exited non-zero; not reporting success" >&2
+  exit 1
+fi
 echo "Now judge + analyse on the LOGIN node (needs internet):"
 echo "  python scripts/06_judge_gold.py --config $CFG && python scripts/07_analyze.py --config $CFG"
