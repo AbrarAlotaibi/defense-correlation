@@ -4,7 +4,8 @@ import csv, io, json, re
 R = 'results/hpc_vicuna_autodan/'
 M = 'fusion/manuscript/'
 tex = {f: io.open('paper/' + f, encoding='utf-8').read()
-       for f in ('results_insert.tex', 'fusion_insert.tex', 'estimand_insert.tex')}
+       for f in ('results_insert.tex', 'fusion_insert.tex', 'estimand_insert.tex',
+                 'robustness_insert.tex')}
 allt = "\n".join(tex.values())
 fails, checks = [], 0
 
@@ -68,10 +69,38 @@ want("$100$ of $100$ behaviours", "D2 infeasibility", 'results_insert.tex')
 forbid("faithful, very slightly conservative proxy", "D2 stale proxy claim", 'results_insert.tex')
 
 # --- C4 + judge determinism -----------------------------------------------------------
-jd = json.load(open(M + 'judge_determinism.json'))
-assert jd['overall']['verdict_disagreements'] == 19 and jd['n_rows'] == 300
-want("$19$ of them ($6.3\\%$)", "judge determinism rate", 'results_insert.tex')
-want("$0.58$ to $0.64$", "judge determinism ASR swing", 'results_insert.tex')
+# The single re-judge (19/300) is superseded by the five-repetition measurement; the
+# inserts now quote the latter, so assert against Task B's outputs rather than the pilot's.
+agree = io.open(M.replace('manuscript/', '') + 'taskB/B5_agreement.txt', encoding='utf-8').read()
+assert 'pct_unanimous        90.46' in agree, "B5 unanimity drifted"
+assert 'pct_3_2              4.24' in agree, "B5 3-2 rate drifted"
+want("$90.5\\%$ of responses are unanimous", "grader unanimity", 'robustness_insert.tex')
+want("$4.2\\%$ rest on a bare", "grader 3-2 rate", 'robustness_insert.tex')
+want("$0.185$ wide against $0.312$", "grader vs bootstrap width", 'robustness_insert.tex')
+want("$91\\%$ have overlapping grader intervals", "Delta orderability", 'robustness_insert.tex')
+forbid("$19$ of them ($6.3\\%$)", "superseded single re-judge rate", 'results_insert.tex')
+
+# Task A
+want("$193.4$", "Cochran Q", 'robustness_insert.tex')
+want("$11$ of the $21$ pairs after Holm", "Holm count", 'robustness_insert.tex')
+want("$15/15$ pairs", "permutation vs bootstrap agreement", 'robustness_insert.tex')
+want("$p=1.0$", "Llama Guard vs stack McNemar", 'results_insert.tex')
+
+# Task D
+dv = json.load(open(M.replace('manuscript/', '') + 'taskD/D3_verdict.json'))
+assert 'UNDEFINED' in str(dv['probe16_x_probe8_survives_BH_under_external_thresholds'])
+assert dv['probe16_x_probe8_informative_strata'] == 0
+want("0.08 \\to 0.26", "probe16 FRR transfer", 'robustness_insert.tex')
+want("0.35 \\to 0.64", "token-anomaly ASR transfer", 'robustness_insert.tex')
+want("minimum across the whole grid is $0.300$", "min phi across regimes", 'robustness_insert.tex')
+want("undefined", "CMH undefined, not refuted", 'robustness_insert.tex')
+
+# the figures the robustness section cites must exist
+import os
+for fig in ('fig3b_forest_phi.pdf', 'fig5_regimes_phi.pdf'):
+    checks += 1
+    if not os.path.isfile('paper/figures/' + fig):
+        fails.append(f"missing figure paper/figures/{fig}")
 # The manuscript's 2.4% of 2700 is CORRECT; an earlier "correction" here was not.
 # gold.jsonl has 2700 rows of which 1887 were judged, so both denominators must appear.
 want("$66$ of the $2700$ graded", "C4 manuscript figure retained", 'results_insert.tex')

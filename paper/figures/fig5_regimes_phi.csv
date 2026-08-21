@@ -1,0 +1,16 @@
+pair,phi_single,phi_majority,phi_external
+refusal prime × token anomaly,0.300,0.337,0.629
+probe L16 × token anomaly,0.324,0.406,0.691
+SmoothLLM × token anomaly,0.341,0.381,0.603
+perplexity × token anomaly,0.350,0.357,0.759
+probe L8 × token anomaly,0.385,0.369,0.693
+probe L16 × refusal prime,0.446,0.605,0.663
+probe L8 × refusal prime,0.458,0.574,0.580
+probe L8 × SmoothLLM,0.475,0.492,0.475
+probe L16 × SmoothLLM,0.485,0.510,0.519
+refusal prime × SmoothLLM,0.557,0.682,0.454
+perplexity × SmoothLLM,0.566,0.515,0.496
+perplexity × refusal prime,0.577,0.639,0.600
+perplexity × probe L16,0.594,0.736,0.654
+perplexity × probe L8,0.621,0.658,0.843
+probe L16 × probe L8,0.753,0.759,0.590

@@ -153,6 +153,13 @@ Table~\ref{tab:dependency} and no measurement at all, recovers the choice made b
 with full access to the joint breach data. That is a useful property for practitioners, who
 will have the taxonomy long before they have the correlation matrix.
 
+This agreement is specific to the labels originally reported. Re-deriving both procedures on
+majority-vote grader labels (\S\ref{sec:robustness}) makes them diverge from size three,
+because the marginal ordering of the two probes inverts and rule~2 selects on marginal ASR; at
+size four both still reach residual $0.25$, but the greedy set does so at $0.28$ false refusal
+against the row rule's $0.44$. We therefore report the agreement as a property of one labelling
+rather than of the heuristic.
+
 The comparison stops at size four, and the reason is structural rather than empirical: the six
 non-Llama-Guard defenses span exactly four dependency rows, so rule~2 admits no size-five
 stack. The greedy search continues, adding probe$_{16}$ and then perplexity, and reaches

@@ -112,9 +112,17 @@ pairs, only the probe pair survives the difficulty-stratified test of \S\ref{sec
 odds ratio $1.39$, $p=0.91$), so its $\phi=0.35$ is consistent with a shared difficulty
 gradient rather than a shared mechanism. H1 is therefore supported on the pair whose members
 share an input representation, and the confirmatory pair supports it only before
-stratification. Since the surviving pair is also the exploratory one added by amendment
-(\S\ref{sec:limits-corr}), the mechanism-specific reading of H1 rests on a single post-hoc
-pair and should be treated as suggestive rather than confirmed.
+stratification.
+
+We tested that residual claim under two further perturbations, and it does not hold up
+(\S\ref{sec:robustness}). Under majority-vote grader labels the probe pair still survives
+stratification but its common odds ratio falls from $159$ to $11.8$, and two \emph{cross-row}
+pairs begin surviving alongside it. Under thresholds calibrated out of sample the pair's
+stratified test becomes undefined --- every difficulty stratum is saturated --- and the single
+pair that does survive is cross-row. The mechanism-specific reading of H1 therefore depends on
+both the grader draw and the calibration corpus, and we do not claim it. What survives every
+perturbation is the weaker statement H1 was posed against: same-row defenses fail together, as
+does every other pair we measured.
 
 \paragraph{H2: cross-row defenses are \emph{not} independent. Rejected.}
 Every one of the thirteen non-degenerate cross-row pairs shows a positive failure
@@ -177,6 +185,15 @@ the direct attack on the assembled stack breaches none. McNemar against the stro
 layer --- the mid-layer probe, at $\hat p = 0.68$, not one of the near-perfect filters ---
 gives $68$ behaviours breached by the probe but held by the stack, $0$ in the reverse
 direction ($p = 7\times 10^{-21}$).
+
+That comparison is against the weakest available contrast, and the informative one runs the
+other way. Exact-binomial McNemar of \emph{Llama~Guard} against the assembled seven-layer
+stack gives $1$ discordant behaviour in the layer's favour and $0$ against, $p=1.0$: the
+single strongest member and the full stack are statistically indistinguishable. Across all
+$21$ pairs Llama~Guard also \emph{dominates} every other member --- there is no behaviour on
+which it is breached while another defense holds --- and $11$ of the $21$ pairs separate after
+Holm correction (Cochran's $Q=193.4$, $\mathrm{df}=6$, $p=5\times10^{-39}$). Six of the seven
+layers therefore purchase no measurable additional security on this target.
 
 To give the comparison resolution we repeated it with Llama~Guard removed, since its residual
 of $0.01$ is what pins the intersection to the floor. Over the remaining six defenses the
@@ -297,9 +314,12 @@ difficulty effect looks like. Same-row membership is therefore not sufficient on
 mechanism-specific correlated failure; what the surviving pair has in addition is a shared
 \emph{input representation}, two probes reading the same residual stream at different depths.
 Cross-row defenses do fail together,
-but predominantly because they face a common difficulty gradient rather than because they
-share a mechanism. Row membership therefore predicts \emph{mechanism-specific} correlated
-failure, which is the substantive content of Table~\ref{tab:dependency}; the residual
+but on these labels predominantly because they face a common difficulty gradient rather than
+because they share a mechanism. That reading is specific to this grader draw and this
+calibration: \S\ref{sec:robustness} shows two cross-row pairs surviving under majority-vote
+labels and a cross-row pair replacing the probe pair entirely under external thresholds. We
+therefore present the row taxonomy as an organising device for which defenses to combine, not
+as a validated predictor of mechanism-specific failure. The residual
 cross-row dependence is real but common-cause. Both regimes violate the independence
 assumption that multiplicative composition requires, so the practical conclusion of
 \S\ref{sec:corr-measure} is unchanged.
@@ -408,15 +428,15 @@ reported ASRs are very slightly conservative. Relative to the $1887$ responses a
 to the grader --- blocked inputs are never judged, so they cannot fail to parse --- the rate
 is $3.5\%$, which is the tighter denominator of the two.
 
-\textbf{Judge reproducibility.} The grader is not deterministic, and the reported intervals do
-not cover it. Re-judging an identical set of $300$ undefended responses with the same rubric,
-model and temperature produced different verdicts on $19$ of them ($6.3\%$), only one of which
-involved a parse failure; the undefended adaptive ASR moved from $0.58$ to $0.64$ on the
-re-judge alone. The bootstrap intervals throughout this section resample behaviours and
-therefore quantify sampling variation, not grader variation. Differences in ASR of a few
-points should not be read as meaningful. Correlations are plausibly more robust than levels,
-since a shifted verdict moves both members of a pair, but we have not measured that and do not
-claim it.
+\textbf{Judge reproducibility.} The grader is not deterministic, and the bootstrap intervals
+reported above do not cover it: they resample behaviours and are silent about the grader. We
+quantified this by judging all $1{,}887$ graded responses five times under an unchanged rubric,
+model and temperature (\S\ref{sec:robustness}): $90.5\%$ of responses are unanimous, $9.5\%$
+split, and $4.2\%$ rest on a bare $3$--$2$ majority. Resampling one judgment per response gives
+a grader-only interval on $\phi$ averaging $0.185$ wide against $0.312$ for the behaviour
+bootstrap, so grader variation is roughly $60\%$ the width of sampling variation rather than a
+rounding concern. Differences in $\Delta$ smaller than about $0.05$ should not be ordered:
+among pairs of pairs separated by less than that, $91\%$ have overlapping grader intervals.
 \textbf{Stack composition.} The direct-stack measurement uses one fixed layer ordering; we
 do not vary the order, and with Llama~Guard present the assembled residual is near zero,
 which limits what the intersection-versus-direct comparison can discriminate.
