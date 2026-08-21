@@ -80,7 +80,9 @@ disagreement and $\phi$, and $0.89$ between double-fault and $\phi$. The conclus
 \S\ref{sec:corr-measure} is therefore not an artefact of choosing $\phi$; three further
 statistics, developed independently for ensemble analysis, order the pairs the same way and
 reach the same sign. We regard this as a robustness check rather than a new finding, and
-report it as such.
+report it as such. Table~\ref{tab:fusion} gives point estimates for legibility; $10{,}000$-resample
+bootstrap intervals for $Q$, disagreement and double-fault, on the same footing as those
+reported for $\phi$, are included in the supplementary material.
 
 \paragraph{Why Llama~Guard is excluded here.}
 Table~\ref{tab:fusion} omits Llama~Guard for a sharper reason than in
@@ -102,7 +104,9 @@ asymmetric. Relaxing from $k=1$ to $k=2$ buys $22$ points of benign false refusa
 of $18$ points of attack success, and by $k=3$ residual ASR has passed $0.4$. At this
 operating point the veto is the only defensible corner, which is worth stating because the
 fusion literature's usual advice --- majority vote --- is actively harmful when the members'
-errors are as correlated as they are here.
+errors are as correlated as they are here. False refusal is flat at $0.080$ from $k=4$ onward
+because no benign prompt is refused by four or more members at once; that floor is the base
+model's own refusal rate rather than a contribution from any layer (\S\ref{sec:h3-note}).
 
 The last row of Table~\ref{tab:combrules} is the more uncomfortable one. Llama~Guard alone
 attains the same $0.010$ residual ASR as the full seven-member stack at roughly half its
@@ -127,6 +131,8 @@ $k=1$ of 7 (veto, as reported) & 0.010 & 0.520 \\
 $k=2$ of 7                     & 0.190 & 0.300 \\
 $k=3$ of 7                     & 0.430 & 0.110 \\
 $k=4$ of 7                     & 0.590 & 0.080 \\
+$k=5$ of 7                     & 0.680 & 0.080 \\
+$k=6$ of 7                     & 0.750 & 0.080 \\
 $k=7$ of 7 (unanimous flag)    & 0.790 & 0.080 \\
 \midrule
 strongest single layer (Llama~Guard) & 0.010 & 0.260 \\
@@ -140,12 +146,19 @@ that this is a coarse proxy for what one actually wants, which is low double-fau
 therefore compare it against a greedy search that selects members by directly minimising
 double-fault with the current set. Excluding Llama~Guard, whose floor makes every rule look
 identical, the two procedures select the \emph{same} members in the \emph{same} order, with
-identical ASR and FRR at every stack size: token-anomaly ($0.35/0.09$), then SmoothLLM
-($0.27/0.27$), then probe$_{8}$ ($0.23/0.28$), then refusal-prime ($0.20/0.45$). The row
-heuristic, which requires only the taxonomy of Table~\ref{tab:dependency} and no measurement
-at all, recovers the choice made by a search with full access to the joint breach data. That
-is a useful property for practitioners, who will have the taxonomy long before they have the
-correlation matrix.
+identical ASR and FRR at every stack size the row rule admits: token-anomaly
+($0.35/0.09$), then SmoothLLM ($0.27/0.27$), then probe$_{8}$ ($0.23/0.28$), then
+refusal-prime ($0.20/0.45$). The row heuristic, which requires only the taxonomy of
+Table~\ref{tab:dependency} and no measurement at all, recovers the choice made by a search
+with full access to the joint breach data. That is a useful property for practitioners, who
+will have the taxonomy long before they have the correlation matrix.
+
+The comparison stops at size four, and the reason is structural rather than empirical: the six
+non-Llama-Guard defenses span exactly four dependency rows, so rule~2 admits no size-five
+stack. The greedy search continues, adding probe$_{16}$ and then perplexity, and reaches
+$0.190$ against the row rule's $0.200$ --- so the taxonomy is not strictly optimal, merely
+capped by itself, and the last two additions buy nothing (ASR $0.190$ twice, false refusal
+flat at $0.450$).
 
 \paragraph{False refusals are correlated too, and compose worse than any rule predicts.}
 \S\ref{sec:h3-note} reported that the assembled stack refuses $0.810$ of benign prompts
