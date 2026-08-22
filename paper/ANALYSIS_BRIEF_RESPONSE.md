@@ -141,6 +141,35 @@ several more strongly than in-sample.
 
 ---
 
+## Two confirmations requested by the writer
+
+**The 66 parse failures are the SINGLE-JUDGMENT count, and scoping them that way is
+necessary, not merely careful.** Directly counted from `results/hpc_vicuna_autodan/gold.jsonl`:
+1,887 responses judged, 66 unparsed = 3.50% of judged, 2.44% of all 2,700 rows. The
+majority-vote equivalent, computed over the five repetitions, is **72** — they differ, so the
+figure must be labelled by regime.
+
+1,887 is the direct count; 1,885 does not correspond to any count in the run.
+
+Worth one clause in the text: across the five repetitions the unparsed count ran **68, 70, 73,
+73, 79** (mean 72.6). The reported 66 is *below every repetition*, so 2.4% sits at the
+favourable end of the distribution rather than in the middle of it.
+
+**Table 10 should stay on single-judgment values.** The conservatism argument holds, but the
+decisive reason is consistency: Table 10's φ values are not standalone. The difficulty-
+stratified analysis, all four figures, the McNemar comparisons, the intersection check and the
+fusion recast all derive from the same single-judgment breach vectors. Swapping Table 10 alone
+would desynchronise it from Table 12 and every figure; swapping everything would additionally
+move the confound result from one surviving pair to three, reopening the H1/H2 narrative.
+
+One scoping fix, though: the published table is the smaller of the two for **thirteen of the
+fifteen** pairs, not all of them. Two fall under majority labels — perplexity × SmoothLLM
+(0.566 → 0.515) and token-anomaly × probe₈ (0.385 → 0.369) — and probe₁₆'s marginal ASR drops
+0.68 → 0.64, so the published value overstates that one. A blanket "the published table is the
+conservative estimate" overstates the claim; "for thirteen of the fifteen pairs" is accurate.
+
+---
+
 ## What this changes in the manuscript — already applied
 
 `paper/robustness_insert.tex` is **new** and carries all of the above. The other inserts were
