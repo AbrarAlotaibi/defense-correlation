@@ -1,0 +1,25 @@
+# Standalone requirements for the defense-correlation experiment.
+#
+# On the author's machine these are already satisfied by the `gambit-abl` conda env
+# (torch 2.6.0+cu124, transformers 5.14.1); a fresh environment can be built from
+# environment.yml or by installing this file into a CUDA-enabled Python 3.11+.
+#
+# NOTE: install a CUDA build of torch matching your driver (see environment.yml). The
+# dtype shim in dcorr/compat.py supports transformers 4.45+ and 5.x.
+
+torch>=2.4
+transformers>=4.45
+accelerate>=0.34
+bitsandbytes>=0.43      # nf4 quantization for the 8B replication targets / guard
+datasets>=2.20
+huggingface_hub>=0.24
+numpy>=1.26
+pandas>=2.0
+scipy>=1.11
+statsmodels>=0.14       # (reserved for power reporting)
+scikit-learn>=1.3       # probe val AUROC
+matplotlib>=3.8         # Figure 3(a)
+openai>=1.40            # StrongREJECT gold judge (post hoc)
+pyyaml>=6.0
+tqdm>=4.66
+pytest>=8.0             # tests/

@@ -1,0 +1,444 @@
+% =====================================================================================
+% Paper insert for "Defending Large Language Models: Access Tiers, Inference Cost, and
+% Why Layered Defenses Compound Only Under Independence".
+%
+% ALL NUMBERS ARE MEASURED. No placeholders.
+%   Primary   : Vicuna-7B-v1.5, AutoDAN-style fluent attack, n = 100 JBB behaviours.
+%   Secondary : same target under GCG (attack-class contrast), Llama-2-7B-chat, Llama-3.2-3B.
+%   Judge     : StrongREJECT rubric autograder, post hoc, official prompt (SHA-256 pinned).
+% Sources: results/hpc_vicuna_autodan/, results/hpc_vicuna/, results/hpc_llama2/
+% =====================================================================================
+
+\subsection{Measuring failure correlation between stacked defenses}
+\label{sec:corr-measure}
+
+Section~\ref{sec:composition} argued that layered defenses compound only when their failures
+are independent. We now test that premise directly. For each defense $d$ and behaviour $i$
+we record a binary breach $b_d(i)\in\{0,1\}$ under a gold judge, and for each pair report
+the marginals $\hat p_1,\hat p_2$, the joint
+$\mathrm{ASR}_{d_1d_2}=\tfrac1n\sum_i b_{d_1}(i)b_{d_2}(i)$, the excess over independence
+$\Delta=\mathrm{ASR}_{d_1d_2}-\hat p_1\hat p_2$, and the failure correlation $\phi$, which is
+the $\rho$ of Eq.~\eqref{eq:joint}.
+
+\paragraph{Setup.}
+$n=100$ JailbreakBench behaviours with the matched benign set. Seven defenses span the
+dependency rows of Table~\ref{tab:dependency}: a windowed perplexity filter and a surface
+token-anomaly filter (token surface); Llama~Guard~3~8B (semantic classification); a
+refusal-priming prefix (first-token distribution); SmoothLLM, $q{=}4$, $10\%$ character
+perturbation (perturbation stability); and linear probes on hidden states at layers 16 and 8
+(internal representations). Every thresholded filter has its threshold set so that it
+\emph{blocks} $1\%$ of the benign prompts (a $1\%$ filter false-positive rate); the realised
+block rate is $0.010$ for all four thresholded filters. This is a different quantity from the
+system-level false-refusal rate used in H3, which also counts prompts the base model declines
+of its own accord (\S\ref{sec:h3-note}). The in-loop attack signal is the target logprob of the affirmative
+prefix; the StrongREJECT autograder scores breach \emph{post hoc} and never participates in
+the search.
+
+\paragraph{The attack class determines what can be measured.}
+\label{par:attack-class}
+We ran two adaptive adversaries. GCG optimises an adversarial suffix of arbitrary tokens;
+AutoDAN performs a sentence-level genetic search over fluent prompts. Their prompts differ
+sharply in surface statistics, and the perplexity filter is calibrated at a windowed-NLL
+threshold of $4.85$:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+Prompt style & mean windowed NLL & admitted by the perplexity filter \\
+\midrule
+Plain behaviour       & 3.18  & $5/5$ \\
+AutoDAN (fluent)      & 4.47  & $5/5$ \\
+Compliance template   & 5.15  & $0/5$ \\
+GCG suffix            & 13.56 & $0/5$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Under GCG the perplexity filter blocks $100/100$ attack prompts and its residual ASR is
+exactly $0$, so every pair containing it has an \emph{undefined} $\phi$. Under AutoDAN it
+blocks $0/100$ and its residual ASR is $0.66$. \textbf{The filter's apparent invulnerability
+is a property of the attack class, not of the defense.} This is the central methodological
+caution of this section: a defense evaluated only against high-perplexity suffix attacks
+will be scored as near-perfect and will contribute a spurious zero to any composition
+estimate. All results below therefore use the fluent adversary, which admits every defense
+into the measurement.
+
+% -------------------------------------------------------------------------------------
+\begin{table}[t]
+\centering
+\caption{Measured failure correlation, Vicuna-7B-v1.5 under the fluent (AutoDAN) adversary,
+$n=100$, StrongREJECT gold. $\Delta$ is the excess over the independence prediction; $\phi$
+carries a $10{,}000$-resample bootstrap $95\%$ CI; $q$ is Benjamini--Hochberg adjusted.
+Same-row pairs are boxed at the top. Llama~Guard pairs are omitted: it admits almost nothing
+($\hat p = 0.01$), so its $\phi$ is uninformative (\S\ref{sec:complementary}).}
+\label{tab:dependency}
+\begin{tabular}{llccccc}
+\toprule
+Defense pair & Rows & $\hat p_1$ & $\hat p_2$ & $\Delta$ & $\phi$ (95\% CI) & $q$ \\
+\midrule
+\multicolumn{7}{l}{\emph{Same row (H1)}}\\
+probe$_{16}$ $\times$ probe$_{8}$    & internal repr.  & 0.68 & 0.60 & 0.172 & $\mathbf{0.75}\;[0.62,0.88]$ & $<0.001$ \\
+perplexity $\times$ token-anomaly    & token surface   & 0.66 & 0.35 & 0.079 & $\mathbf{0.35}\;[0.18,0.50]$ & $<0.001$ \\
+\midrule
+\multicolumn{7}{l}{\emph{Cross row (H2)}}\\
+perplexity $\times$ probe$_{8}$      & surface $\times$ internal    & 0.66 & 0.60 & 0.144 & $0.62\;[0.45,0.77]$ & $<0.001$ \\
+perplexity $\times$ probe$_{16}$     & surface $\times$ internal    & 0.66 & 0.68 & 0.131 & $0.59\;[0.42,0.76]$ & $<0.001$ \\
+perplexity $\times$ refusal-prime    & surface $\times$ first-token & 0.66 & 0.60 & 0.134 & $0.58\;[0.41,0.73]$ & $<0.001$ \\
+perplexity $\times$ SmoothLLM        & surface $\times$ perturb.    & 0.66 & 0.54 & 0.134 & $0.57\;[0.40,0.72]$ & $<0.001$ \\
+refusal-prime $\times$ SmoothLLM     & first-token $\times$ perturb.& 0.60 & 0.54 & 0.136 & $0.56\;[0.39,0.71]$ & $<0.001$ \\
+probe$_{16}$ $\times$ SmoothLLM      & internal $\times$ perturb.   & 0.68 & 0.54 & 0.113 & $0.49\;[0.31,0.65]$ & $<0.001$ \\
+probe$_{8}$ $\times$ SmoothLLM       & internal $\times$ perturb.   & 0.60 & 0.54 & 0.116 & $0.48\;[0.30,0.64]$ & $<0.001$ \\
+probe$_{8}$ $\times$ refusal-prime   & internal $\times$ first-token& 0.60 & 0.60 & 0.110 & $0.46\;[0.28,0.63]$ & $<0.001$ \\
+probe$_{16}$ $\times$ refusal-prime  & internal $\times$ first-token& 0.68 & 0.60 & 0.102 & $0.45\;[0.26,0.62]$ & $<0.001$ \\
+probe$_{8}$ $\times$ token-anomaly   & internal $\times$ surface    & 0.60 & 0.35 & 0.090 & $0.39\;[0.22,0.54]$ & $<0.001$ \\
+SmoothLLM $\times$ token-anomaly     & perturb. $\times$ surface    & 0.54 & 0.35 & 0.081 & $0.34\;[0.16,0.52]$ & $0.001$ \\
+probe$_{16}$ $\times$ token-anomaly  & internal $\times$ surface    & 0.68 & 0.35 & 0.072 & $0.32\;[0.16,0.48]$ & $<0.001$ \\
+refusal-prime $\times$ token-anomaly & first-token $\times$ surface & 0.60 & 0.35 & 0.070 & $0.30\;[0.12,0.47]$ & $0.004$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% -------------------------------------------------------------------------------------
+\paragraph{H1: same-row defenses fail together. Supported.}
+Both within-row pairs show strong positive correlation. Two probes reading the same residual
+stream at different depths reach $\phi=0.75$ ($[0.62,0.88]$), with a joint residual of $0.58$
+against an independence prediction of $0.41$. The pre-registered token-surface pair, which
+could not be evaluated under GCG because the perplexity filter admitted nothing, is
+measurable under the fluent adversary and gives $\phi=0.35$ ($[0.18,0.50]$, $q<0.001$).
+
+The support is uneven, and we state that rather than average over it. Of the two same-row
+pairs, only the probe pair survives the difficulty-stratified test of \S\ref{sec:confound}
+(common odds ratio $159$, $q<0.001$); the pre-registered token-surface pair does not (common
+odds ratio $1.39$, $p=0.91$), so its $\phi=0.35$ is consistent with a shared difficulty
+gradient rather than a shared mechanism. H1 is therefore supported on the pair whose members
+share an input representation, and the confirmatory pair supports it only before
+stratification.
+
+We tested that residual claim under two further perturbations, and it does not hold up
+(\S\ref{sec:robustness}). Under majority-vote grader labels the probe pair still survives
+stratification but its common odds ratio falls from $159$ to $11.8$, and two \emph{cross-row}
+pairs begin surviving alongside it. Under thresholds calibrated out of sample the pair's
+stratified test becomes undefined --- every difficulty stratum is saturated --- and the single
+pair that does survive is cross-row. The mechanism-specific reading of H1 therefore depends on
+both the grader draw and the calibration corpus, and we do not claim it. What survives every
+perturbation is the weaker statement H1 was posed against: same-row defenses fail together, as
+does every other pair we measured.
+
+\paragraph{H2: cross-row defenses are \emph{not} independent. Rejected.}
+Every one of the thirteen non-degenerate cross-row pairs shows a positive failure
+correlation, all significant after multiplicity correction, with $\phi$ ranging from $0.30$
+to $0.62$. Defenses that share no mechanism --- a surface statistic, a mid-network linear
+probe, a first-token prior, and a randomised-smoothing wrapper --- nonetheless fail on
+overlapping inputs. The effect replicates across targets and attack classes: the
+probe~$\times$~refusal-prime correlation is $0.21$ on Llama-3.2-3B, $0.26$ on Llama-2-7B and
+$0.25$ on Vicuna under GCG, and $0.45$ under the fluent attack.
+
+The practical consequence is immediate: the multiplicative model systematically overstates a
+stack's protection. For perplexity~$\times$~probe$_{16}$ the independence prediction is
+$0.449$ while the measured joint residual is $0.580$, and the pattern holds for every pair we
+measured, with $\Delta>0$ throughout and $\Delta$ up to $0.172$. \textbf{Layered defenses
+compound only under independence, and independence does not hold in practice.}
+
+\S\ref{sec:confound} shows that most of this cross-row association is attributable to a
+common cause --- variation in how jailbreakable individual behaviours are --- rather than to
+mechanism overlap. That distinction matters for interpreting Table~\ref{tab:dependency}, but
+it does not soften the composition result: whether layers fail together because they share a
+blind spot or because they face a common difficulty gradient, the joint residual exceeds
+$\hat p_1\hat p_2$ and the stack under-delivers.
+
+\paragraph{H3: the refusal budget binds. Supported.}
+\label{sec:h3-note}
+The quantity $f_i$ here is the \emph{system-level} false refusal rate: the fraction of benign
+prompts on which the deployed configuration returns a refusal, whether because the filter
+blocked the prompt or because the base model declined it unprompted. It is therefore larger
+than the $1\%$ filter block rate the thresholds were calibrated to: measured directly, the
+undefended model refuses $8$ of the $100$ benign prompts, and every defended configuration
+refuses a superset of exactly those eight. Measured $f_i$ are refusal-prime $0.39$,
+Llama~Guard $0.26$, SmoothLLM $0.26$, probe$_8$ $0.09$, token-anomaly $0.09$, perplexity
+$0.08$ and probe$_{16}$ $0.08$.
+
+Reporting those rates raw overstates what the defenses cost. Netting out the floor --- the
+rate at which a configuration refuses a prompt the bare model did \emph{not} refuse --- gives
+an attributable burden of $0.337$ for refusal-prime, $0.196$ for Llama~Guard and SmoothLLM,
+$0.011$ for probe$_8$ and token-anomaly, and \textbf{$0.000$ for perplexity and
+probe$_{16}$}: those two refuse on precisely the floor and nothing else, so their entire
+apparent false-refusal cost belongs to the base model. The assembled
+stack refuses $0.810$ of benign prompts, against an independence prediction of
+$1-\prod_i(1-f_i)=0.766$ and a union bound of $\sum_i f_i=1.25$. The observed rate lies
+between the two, close to the independence prediction and comfortably inside the bound.
+Refusal budget is therefore exhausted long before inference cost becomes the binding
+constraint, exactly as Eq.~\eqref{eq:refusal} predicts: a seven-layer stack that admits only
+$1\%$ of adaptive attacks also refuses four in five benign requests, which is not a
+deployable operating point.
+
+\paragraph{Intersection versus a direct attack on the stack.}
+Failure correlation is estimated by intersecting per-defense breach vectors, but the
+quantity a deployer cares about is the residual of the assembled stack under an adversary
+that attacks \emph{it}. We measure both. Intersecting the seven per-defense vectors predicts
+a joint residual of $0.010$; running the same fluent adversary directly against the
+assembled stack yields $0.000$, and the two agree on $99$ of $100$ behaviours. That
+agreement does establish that the pairwise analysis above is not an artefact of never having
+attacked the real system. It is weak evidence for anything more, because both quantities lie
+on the floor, where any method returning near-zero would agree.
+The single behaviour that survives the intersection is the same one Llama~Guard fails on;
+the direct attack on the assembled stack breaches none. McNemar against the strongest single
+layer --- the mid-layer probe, at $\hat p = 0.68$, not one of the near-perfect filters ---
+gives $68$ behaviours breached by the probe but held by the stack, $0$ in the reverse
+direction ($p = 7\times 10^{-21}$).
+
+That comparison is against the weakest available contrast, and the informative one runs the
+other way. Exact-binomial McNemar of \emph{Llama~Guard} against the assembled seven-layer
+stack gives $1$ discordant behaviour in the layer's favour and $0$ against, $p=1.0$: the
+single strongest member and the full stack are statistically indistinguishable. Across all
+$21$ pairs Llama~Guard also \emph{dominates} every other member --- there is no behaviour on
+which it is breached while another defense holds --- and $11$ of the $21$ pairs separate after
+Holm correction (Cochran's $Q=193.4$, $\mathrm{df}=6$, $p=5\times10^{-39}$). Six of the seven
+layers therefore purchase no measurable additional security on this target.
+
+To give the comparison resolution we repeated it with Llama~Guard removed, since its residual
+of $0.01$ is what pins the intersection to the floor. Over the remaining six defenses the
+intersection predicts a substantial residual of $0.190$. A direct fluent attack on that
+assembled six-layer stack yields $0.000$, disagreeing with the intersection by the full
+$0.190$. The mechanism is joint infeasibility rather than the stack defeating successful
+attacks: every attempt was rejected at the input stage, and the search failed to find a prompt
+satisfying all six constraints simultaneously on $100$ of $100$ behaviours. Optimising against
+each layer separately and intersecting implicitly assumes that a prompt defeating one layer
+survives the others when they are present, and the joint feasible region is far smaller than
+that assumption allows.
+
+The intersection estimate is therefore not a faithful proxy for an assembled stack in general.
+It is conservative for the deployer and optimistic for the attacker, and on the one
+configuration where the check can discriminate, the error is as large as the quantity being
+estimated. We accordingly report the pairwise analysis as a measurement of correlation between
+defenses, which is what it is, rather than as a prediction of assembled-stack residual. The
+claim this licenses is bounded by the attack budget: under a search sufficient to produce a
+$0.190$ per-layer intersection residual, a direct attack finds no feasible prompt on any
+behaviour --- a statement about that search, not a proof that the feasible region is empty.
+
+\paragraph{Adaptive versus static attackers.}
+We run two static baselines against every defense: the unmodified behaviour prompt, and a
+single precomputed GCG suffix reused for all behaviours. The gaps quoted here are against the
+transfer suffix; all figures are gold-judged residual ASR on the same $n=100$ behaviours.
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Defense & adaptive (fluent) & static: transfer suffix & static: plain prompt \\
+\midrule
+perplexity          & 0.66 & 0.00 & 0.07 \\
+probe$_{16}$        & 0.68 & 0.28 & 0.08 \\
+refusal-prime       & 0.60 & 0.11 & 0.03 \\
+SmoothLLM           & 0.54 & 0.04 & 0.06 \\
+token-anomaly       & 0.35 & 0.28 & 0.07 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The gap against the transfer suffix is $0.66$ for the perplexity filter, $0.50$ for
+SmoothLLM, $0.49$ for refusal-prime and $0.40$ for the mid-layer probe. The perplexity filter
+is the one case where the plain prompt is the \emph{stronger} static baseline ($0.07$ versus
+$0.00$), for the reason given in \S\ref{par:attack-class}: the transfer suffix is
+high-perplexity and the filter blocks it, whereas an unmodified prompt passes.
+
+The same pattern holds on the strongly aligned Llama-2-7B-chat target, where the undefended
+gold ASR is $0.37$ under GCG ($n=100$) and $0.40$ under the fluent attack ($n=50$), against
+$0.02$ for the unmodified prompt in both cases. A static evaluation would therefore
+understate residual risk by more than an order of magnitude on that target as well.
+
+\paragraph{Where the optimiser underperforms a fixed suffix.}
+\label{par:inversion}
+In the \emph{suffix}-attack runs the optimised attack is occasionally less successful than a
+static baseline: on Vicuna the perplexity filter records $0.00$ adaptive against $0.07$ for
+the plain prompt, and SmoothLLM $0.02$ against $0.06$ for the transfer suffix; on Llama-2 the
+same inversion appears for four defenses. We checked that this is not a labelling error:
+adaptive rows carry per-behaviour optimised suffixes, plain rows are byte-identical to the
+behaviour text, and transfer rows carry the shared fixed suffix. The mechanism is the one in
+\S\ref{par:attack-class} --- every inverted case is a defense that neutralises the
+high-perplexity suffix class, so the constrained optimiser is driven into a region where its
+output is blocked or destabilised while an unmodified prompt passes unflagged. Taken
+individually each inversion is $2$--$6$ breaches at $n=100$ and well within sampling noise;
+taken together the direction is systematic.
+
+Two consequences follow. First, the adaptive column reports the optimiser's own output rather
+than a best-of-strategies adversary; a deployer should read
+$\max(\text{adaptive},\text{static})$, which in the suffix runs raises the perplexity filter
+to $0.07$ and SmoothLLM to $0.06$. Second, and more important for everything above,
+\textbf{no inversion occurs in either fluent run}: the primary Vicuna results and the Llama-2
+replication are free of it, so Table~\ref{tab:dependency}, H1--H3, the stratified analysis and
+the intersection comparison are unaffected.
+
+\subsection{Is the correlation just behaviour difficulty?}
+\label{sec:confound}
+
+A positive $\phi$ between two defenses does not by itself establish a shared blind spot.
+Behaviours differ in how readily they are jailbroken, and if every defense fails on the same
+easy behaviours the pairwise correlations follow from that common cause alone. Because this
+is the most consequential alternative explanation of the results above, we test it
+explicitly rather than leaving it to interpretation.
+
+For each pair $(d_1,d_2)$ we stratify the behaviours by a difficulty score computed from the
+\emph{other} defenses only --- the number of the remaining live defenses that were breached
+on that behaviour --- and compute the Cochran--Mantel--Haenszel (CMH) common odds ratio,
+which measures the $d_1$--$d_2$ association \emph{within} strata of equal difficulty.
+Deriving the stratifier from the other defenses keeps it independent of the pair under test.
+
+\begin{center}
+\begin{tabular}{llcccc}
+\toprule
+Pair & Rows & $\phi$ & crude OR & CMH OR (within strata) & $q$ \\
+\midrule
+probe$_{16}$ $\times$ probe$_{8}$   & same  & 0.75 & 68.0 & $\mathbf{158.7}$ ($p<0.001$) & $\mathbf{<0.001}$ \\
+refusal-prime $\times$ SmoothLLM    & cross & 0.56 & 12.3 & $4.34$ ($p=0.023$) & $0.173$ \\
+perplexity $\times$ refusal-prime   & cross & 0.58 & 14.5 & $3.95$ ($p=0.063$) & $0.314$ \\
+perplexity $\times$ probe$_{8}$     & cross & 0.62 & 19.1 & $3.07$ ($p=0.21$)  & $0.562$ \\
+perplexity $\times$ token-anomaly   & same  & 0.35 & 6.0  & $1.39$ ($p=0.91$)  & $0.943$ \\
+probe$_{16}$ $\times$ refusal-prime & cross & 0.45 & 7.3  & $0.72$ ($p=0.94$)  & $0.943$ \\
+probe$_{8}$ $\times$ SmoothLLM      & cross & 0.48 & 7.8  & $0.91$ ($p=0.84$)  & $0.943$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The pattern is clear and it sharpens the reading of Table~\ref{tab:dependency}. Of fifteen
+pairs, only two retain a positive within-stratum association at the nominal level, and
+after Benjamini--Hochberg correction across all fifteen only one does ($q$ column): the
+same-row probe pair, whose common odds ratio of $159$ is an
+order of magnitude above its crude value. Three cross-row pairs have CMH odds ratios at or
+below unity, and the remainder are underpowered once the sample is divided into strata of
+roughly fifteen behaviours each.
+
+\textbf{Interpretation.} The two same-row pairs behave differently, and the difference is
+instructive. The probe pair retains a large within-stratum association, so its members share a
+blind spot specific to their mechanism. The pre-registered token-surface pair does not: its
+crude odds ratio of $6.0$ falls to $1.39$ within strata ($p=0.91$), which is what a pure
+difficulty effect looks like. Same-row membership is therefore not sufficient on its own for
+mechanism-specific correlated failure; what the surviving pair has in addition is a shared
+\emph{input representation}, two probes reading the same residual stream at different depths.
+Cross-row defenses do fail together,
+but on these labels predominantly because they face a common difficulty gradient rather than
+because they share a mechanism. That reading is specific to this grader draw and this
+calibration: \S\ref{sec:robustness} shows two cross-row pairs surviving under majority-vote
+labels and a cross-row pair replacing the probe pair entirely under external thresholds. We
+therefore present the row taxonomy as an organising device for which defenses to combine, not
+as a validated predictor of mechanism-specific failure. The residual
+cross-row dependence is real but common-cause. Both regimes violate the independence
+assumption that multiplicative composition requires, so the practical conclusion of
+\S\ref{sec:corr-measure} is unchanged.
+
+\textbf{Two caveats, stated plainly.} The test is deliberately conservative: conditioning on
+the outcomes of other defenses removes shared variance that is arguably part of the effect
+of interest, so it under-credits genuine mechanism overlap. And with $n=100$ split across
+about six strata it is underpowered --- ten of the fifteen pairs return wide intervals, so
+``not significant within strata'' should be read as insufficient evidence rather than as
+evidence of no effect. A larger behaviour set, or pooling across targets, would sharpen
+this analysis, and we flag it as the most valuable extension of this experiment.
+
+\subsection{Replication on a strongly aligned target}
+\label{sec:replication}
+
+Vicuna-7B is weakly aligned by construction, so we repeat the experiment on
+Llama-2-7b-chat with the \emph{same} fluent adversary and the \emph{same} attack budget,
+varying only the target. Following the experiment plan, the replication evaluates the four
+defenses the headline pairs require on the first $50$ behaviours.
+
+Two findings replicate cleanly and one does not.
+
+\paragraph{The attack-class result replicates.}
+On Llama-2 the perplexity filter admits the fluent attack exactly as it did on Vicuna: its
+residual ASR is $0.44$, against $0.00$ for the same defense under GCG on the same target
+(\S\ref{par:attack-class}). The adaptive--static gap replicates at the same magnitude
+($0.44$ adaptive versus $0.00$ static for the perplexity filter; $0.42$ for the early-layer
+probe). The undefended residual is $0.40$, so the fluent adversary is effective against a
+refusal-robust target, not only against a weakly aligned one. This is the finding we regard
+as established across targets.
+
+\paragraph{The correlation structure is directionally consistent but underpowered.}
+Every pair that is measurable on both targets keeps its sign, and the two probes remain the
+most strongly associated pair ($\phi=0.25$, $95\%$ CI $[-0.03,0.52]$, versus $0.75$ on
+Vicuna), but at $n=50$ with lower marginals the intervals are wide and only
+perplexity~$\times$~probe$_{8}$ reaches nominal significance ($\phi=0.35$, $[0.08,0.61]$,
+$p=0.015$, $q=0.089$). We therefore report the replication as \emph{consistent in direction
+and not independently confirmatory}: it does not contradict the Vicuna result, and it does
+not on its own establish it. A full-size replication is the natural next step.
+
+\paragraph{The pre-registered same-row pair remains untestable.}
+On Llama-2 the token-anomaly filter admits almost nothing under the fluent attack (residual
+ASR $0.02$, one breach in fifty), so perplexity~$\times$~token-anomaly is again degenerate
+--- this time because the \emph{second} member of the pair is near-constant rather than the
+first. The pre-registered same-row test is thus measurable on the weakly aligned target only.
+That a row becomes untestable exactly when one of its members is highly effective is a
+structural limitation of correlation-based composition analysis, not a property of these two
+filters (\S\ref{sec:limits-corr}).
+
+\subsection{Complementary coverage: what survives a fluent attack}
+\label{sec:complementary}
+Llama~Guard~3 is the one defense that holds under both adversaries, with residual ASR $0.00$
+under GCG and $0.01$ under AutoDAN, at the cost of the second-highest false-refusal rate
+($0.26$). The perplexity filter shows the opposite profile: near-perfect against
+high-perplexity suffixes and largely ineffective ($0.66$ residual) against fluent prompts.
+The two are complementary in \emph{attack-class coverage} rather than in per-input failure,
+which is the practical reading of the correlations above: a useful stack pairs layers whose
+blind spots lie in different attack classes, not merely in different dependency rows.
+
+\subsection{Limitations}
+\label{sec:limits-corr}
+\textbf{Post-hoc pair.} The probe$_{16}\times$probe$_{8}$ pair was added after observing that
+the pre-registered same-row pair was unmeasurable under GCG; it is reported as exploratory,
+and the two instances share an input representation, so it bounds the same-row effect from
+the easy side. The pre-registered token-surface pair is confirmatory and is reported above.
+\textbf{Attack implementation.} Our fluent adversary is an AutoDAN-\emph{style} sentence-level
+genetic search over a fixed pool of framings; the released AutoDAN additionally uses an LLM
+for paraphrase mutation, which would likely raise ASR further and can only strengthen the
+direction of these findings.
+\textbf{Target strength and replication power.} The primary target is weakly aligned, giving
+high residual ASRs and well-powered correlations. The Llama-2-7B replication
+(\S\ref{sec:replication}) reproduces the attack-class result and the adaptive--static gap,
+but at $n=50$ its correlation estimates are directionally consistent rather than
+independently confirmatory; the correlation claims therefore rest on the single primary
+target, and a full-size replication remains outstanding.
+\textbf{Untestable rows.} H1 is evaluated in two of the five rows. The semantic-classification
+row admits no within-row test on this data for a substantive reason rather than a practical
+one: Llama~Guard's residual ASR is $0.01$, so any second instance in that row would face a
+near-constant breach vector and an undefined $\phi$. A row that is highly effective against
+the available adversary cannot be assessed for internal correlation, which is itself a
+limitation of correlation-based composition analysis.
+\textbf{Statistical power and seeds.} Results come from a single attack seed at $n=100$; the
+bootstrap intervals quantify sampling over behaviours but not the stochasticity of the
+genetic search itself. The stratified analysis of \S\ref{sec:confound} is underpowered by
+construction.
+\textbf{Probe validity.} The internal-representations defense is a probe we trained
+ourselves; its validation AUROC is near-ceiling on a held-out split of the training pools,
+which may reflect topical separability between the harmful and benign corpora as much as a
+representation of harmfulness. Its operating threshold is calibrated on the
+\emph{same} $100$ benign prompts that are later used to report false-refusal rates, so every
+threshold in this study is set in-sample, and at $n=100$ a $1\%$ target rate is a single
+prompt. We have since measured that margin rather than leaving it unknown. Recalibrating on an
+external corpus of $805$ general instructions, disjoint from both the evaluation set and the
+probe's training pool, moves the surface filters only slightly and in the permissive
+direction, but moves probe$_{16}$ so far that at its external threshold it would refuse $26\%$
+of the held-out benign set instead of $1\%$. The evaluation benign prompts are matched
+counterparts to the harmful behaviours and therefore sit far closer to the probe's decision
+boundary than ordinary instructions do. The probe's $1\%$ operating point is thus an artefact
+of the calibration corpus rather than a transferable property --- direct evidence for the
+topical-separability concern raised above --- while the perplexity and token-anomaly filters
+do not share the problem.
+\textbf{Judging.} Breach is scored by a single automated rubric grader at the standard
+binarisation threshold, without human adjudication on this corpus. $66$ of the $2700$ graded
+rows ($2.4\%$) did not parse into the rubric format and are counted as non-breach, so the
+reported ASRs are very slightly conservative. Relative to the $1887$ responses actually sent
+to the grader --- blocked inputs are never judged, so they cannot fail to parse --- the rate
+is $3.5\%$, which is the tighter denominator of the two.
+
+\textbf{Judge reproducibility.} The grader is not deterministic, and the bootstrap intervals
+reported above do not cover it: they resample behaviours and are silent about the grader. We
+quantified this by judging all $1{,}887$ graded responses five times under an unchanged rubric,
+model and temperature (\S\ref{sec:robustness}): $90.5\%$ of responses are unanimous, $9.5\%$
+split, and $4.2\%$ rest on a bare $3$--$2$ majority. Resampling one judgment per response gives
+a grader-only interval on $\phi$ averaging $0.185$ wide against $0.312$ for the behaviour
+bootstrap, so grader variation is roughly $60\%$ the width of sampling variation rather than a
+rounding concern. Differences in $\Delta$ smaller than about $0.05$ should not be ordered:
+among pairs of pairs separated by less than that, $91\%$ have overlapping grader intervals.
+\textbf{Stack composition.} The direct-stack measurement uses one fixed layer ordering; we
+do not vary the order, and with Llama~Guard present the assembled residual is near zero,
+which limits what the intersection-versus-direct comparison can discriminate.
+\textbf{Scope.} Single-turn, A1 jailbreak only. Input-provenance defenses target prompt
+injection (A0) and are excluded as non-commensurable.

@@ -1,0 +1,150 @@
+{
+  "n_behaviours": 100,
+  "live_defenses": [
+    "ppl_filter",
+    "probe",
+    "probe_b",
+    "refusal_prime",
+    "smoothllm",
+    "token_anomaly"
+  ],
+  "pairs": [
+    {
+      "d1": "ppl_filter",
+      "d2": "probe",
+      "phi": 0.5937354270767818,
+      "raw_or": 16.058823529411764,
+      "cmh_or": 2.829050279329609,
+      "p_cmh": 0.24675329300410032,
+      "survives": false
+    },
+    {
+      "d1": "ppl_filter",
+      "d2": "probe_b",
+      "phi": 0.6205052279940221,
+      "raw_or": 19.116923076923076,
+      "cmh_or": 3.071733821733822,
+      "p_cmh": 0.20934134008303906,
+      "survives": false
+    },
+    {
+      "d1": "ppl_filter",
+      "d2": "refusal_prime",
+      "phi": 0.5774145871611037,
+      "raw_or": 14.530864197530864,
+      "cmh_or": 3.9472595260445593,
+      "p_cmh": 0.06277464354489037,
+      "survives": false
+    },
+    {
+      "d1": "ppl_filter",
+      "d2": "smoothllm",
+      "phi": 0.5658733433890033,
+      "raw_or": 15.17142857142857,
+      "cmh_or": 3.3703703703703707,
+      "p_cmh": 0.15992765036881373,
+      "survives": false
+    },
+    {
+      "d1": "ppl_filter",
+      "d2": "token_anomaly",
+      "phi": 0.34964310192092596,
+      "raw_or": 6.014084507042254,
+      "cmh_or": 1.3925925925925926,
+      "p_cmh": 0.9071525713359004,
+      "survives": false
+    },
+    {
+      "d1": "probe",
+      "d2": "probe_b",
+      "phi": 0.7526505451650558,
+      "raw_or": 67.97142857142858,
+      "cmh_or": 158.71896551724137,
+      "p_cmh": 3.7962999221985427e-07,
+      "survives": true
+    },
+    {
+      "d1": "probe",
+      "d2": "refusal_prime",
+      "phi": 0.4463392767839285,
+      "raw_or": 7.279699248120301,
+      "cmh_or": 0.7179732087121572,
+      "p_cmh": 0.9434968735870156,
+      "survives": false
+    },
+    {
+      "d1": "probe",
+      "d2": "smoothllm",
+      "phi": 0.48518108167150864,
+      "raw_or": 9.645403377110695,
+      "cmh_or": 1.255952380952381,
+      "p_cmh": 0.9387977074546906,
+      "survives": false
+    },
+    {
+      "d1": "probe",
+      "d2": "token_anomaly",
+      "phi": 0.32360285938347944,
+      "raw_or": 5.32,
+      "cmh_or": 1.044374779229954,
+      "p_cmh": 0.7660556984590929,
+      "survives": false
+    },
+    {
+      "d1": "probe_b",
+      "d2": "refusal_prime",
+      "phi": 0.4583333333333332,
+      "raw_or": 7.167352537722908,
+      "cmh_or": 0.875221238938053,
+      "p_cmh": 0.8705415351073981,
+      "survives": false
+    },
+    {
+      "d1": "probe_b",
+      "d2": "smoothllm",
+      "phi": 0.4750907476102237,
+      "raw_or": 7.834054834054834,
+      "cmh_or": 0.9148148148148149,
+      "p_cmh": 0.8352701791359533,
+      "survives": false
+    },
+    {
+      "d1": "probe_b",
+      "d2": "token_anomaly",
+      "phi": 0.3851644432598221,
+      "raw_or": 6.454545454545454,
+      "cmh_or": 2.6099754701553555,
+      "p_cmh": 0.26221650609933633,
+      "survives": false
+    },
+    {
+      "d1": "refusal_prime",
+      "d2": "smoothllm",
+      "phi": 0.5570029454740553,
+      "raw_or": 12.261663286004056,
+      "cmh_or": 4.342136744271649,
+      "p_cmh": 0.02306060776746366,
+      "survives": true
+    },
+    {
+      "d1": "refusal_prime",
+      "d2": "token_anomaly",
+      "phi": 0.2995723447576395,
+      "raw_or": 3.916923076923077,
+      "cmh_or": 1.3450625885549012,
+      "p_cmh": 0.789208892270458,
+      "survives": false
+    },
+    {
+      "d1": "smoothllm",
+      "d2": "token_anomaly",
+      "phi": 0.3407363937332405,
+      "raw_or": 4.529411764705882,
+      "cmh_or": 1.7857205354799195,
+      "p_cmh": 0.39536835215236477,
+      "survives": false
+    }
+  ],
+  "n_pairs": 15,
+  "n_survives": 2
+}

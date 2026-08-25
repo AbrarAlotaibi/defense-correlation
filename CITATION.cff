@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: "Measuring failure correlation between stacked LLM defenses"
+message: "If you use this code or its measured Table 6 / Figure 3(a), please cite the accompanying paper."
+type: software
+authors:
+  - family-names: Alotaibi
+    given-names: Abrar
+keywords:
+  - LLM safety
+  - jailbreak
+  - defense stacking
+  - failure correlation
+  - StrongREJECT
+license: MIT
+repository-code: "https://github.com/AbrarAlotaibi/defense-correlation"
+preferred-citation:
+  type: article
+  title: "Defending Large Language Models: Access Tiers, Inference Cost, and Why Layered Defenses Compound Only Under Independence"
+  authors:
+    - family-names: Alotaibi
+      given-names: Abrar
+  journal: "Information Fusion"
+  year: 2026
+  notes: "Under review"

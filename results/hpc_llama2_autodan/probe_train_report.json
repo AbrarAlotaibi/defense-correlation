@@ -1,0 +1,10 @@
+{
+  "model_id": "meta-llama/Llama-2-7b-chat-hf",
+  "layer": 8,
+  "n_train": 520,
+  "n_val": 130,
+  "val_auroc": 1.0,
+  "val_acc": 1.0,
+  "weights_path": "/project/g202203240/defense-correlation/data/probe_llama2_l8.pt",
+  "dedup_reasserted": true
+}

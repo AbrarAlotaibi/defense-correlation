@@ -1,0 +1,8 @@
+defense,asr_suffix_attack,asr_fluent_attack
+Llama Guard,0.0,0.01
+token anomaly,0.42,0.35
+SmoothLLM,0.02,0.54
+probe L8,0.38,0.6
+refusal prime,0.14,0.6
+perplexity,0.0,0.66
+probe L16,0.35,0.68

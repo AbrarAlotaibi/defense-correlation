@@ -1,0 +1,102 @@
+defenses: ['llamaguard', 'ppl_filter', 'probe', 'probe_b', 'refusal_prime', 'smoothllm', 'token_anomaly']
+behaviours: 100   benign prompts: 100
+
+--- single layers (marginal) ---
+                ASR   FRR
+llamaguard     0.01  0.26
+token_anomaly  0.35  0.09
+smoothllm      0.54  0.26
+probe_b        0.60  0.09
+refusal_prime  0.60  0.39
+ppl_filter     0.66  0.08
+probe          0.68  0.08 
+
+--- pairwise diversity: 21 measurable pairs, 0 degenerate ---
+           d1            d2     Q  dis   DF  DF_indep   phi
+   ppl_filter         probe 0.891 0.18 0.58     0.449 0.594
+        probe       probe_b 0.977 0.12 0.58     0.408 0.753
+   ppl_filter       probe_b 0.909 0.18 0.54     0.396 0.621
+   ppl_filter refusal_prime 0.880 0.20 0.53     0.396 0.577
+        probe refusal_prime 0.769 0.26 0.51     0.408 0.446
+   ppl_filter     smoothllm 0.887 0.22 0.49     0.356 0.566
+        probe     smoothllm 0.825 0.26 0.48     0.367 0.485
+      probe_b refusal_prime 0.765 0.26 0.47     0.360 0.458
+refusal_prime     smoothllm 0.859 0.22 0.46     0.324 0.557
+      probe_b     smoothllm 0.784 0.26 0.44     0.324 0.475
+        probe token_anomaly 0.709 0.41 0.31     0.238 0.324
+   ppl_filter token_anomaly 0.738 0.39 0.31     0.231 0.350
+      probe_b token_anomaly 0.750 0.35 0.30     0.210 0.385
+refusal_prime token_anomaly 0.610 0.39 0.28     0.210 0.300
+    smoothllm token_anomaly 0.652 0.35 0.27     0.189 0.341
+   llamaguard     smoothllm 1.000 0.53 0.01     0.005 0.093
+   llamaguard         probe 1.000 0.67 0.01     0.007 0.069
+   llamaguard    ppl_filter 1.000 0.65 0.01     0.007 0.072
+   llamaguard refusal_prime 1.000 0.59 0.01     0.006 0.082
+   llamaguard       probe_b 1.000 0.59 0.01     0.006 0.082
+   llamaguard token_anomaly 1.000 0.34 0.01     0.003 0.137 
+
+pairs with Q > 0 (positively associated errors): 21 / 21
+pairs with double-fault above independence: 21 / 21
+
+--- Spearman agreement between diversity measures ---
+        Q   dis    DF   phi
+Q    1.00  0.17 -0.29 -0.26
+dis  0.17  1.00 -0.91 -0.97
+DF  -0.29 -0.91  1.00  0.95
+phi -0.26 -0.97  0.95  1.00 
+
+--- combination rules (k-of-n over all defenses) ---
+ k  n  ASR  FRR
+ 1  7 0.01 0.52
+ 2  7 0.19 0.30
+ 3  7 0.43 0.11
+ 4  7 0.59 0.08
+ 5  7 0.68 0.08
+ 6  7 0.75 0.08
+ 7  7 0.79 0.08 
+
+--- diversity-greedy selection ---
+ size                                                                         members  ASR  FRR
+    1                                                                      llamaguard 0.01 0.26
+    2                                                          llamaguard, ppl_filter 0.01 0.26
+    3                                                   llamaguard, ppl_filter, probe 0.01 0.26
+    4                                          llamaguard, ppl_filter, probe, probe_b 0.01 0.26
+    5                           llamaguard, ppl_filter, probe, probe_b, refusal_prime 0.01 0.48
+    6                llamaguard, ppl_filter, probe, probe_b, refusal_prime, smoothllm 0.01 0.51
+    7 llamaguard, ppl_filter, probe, probe_b, refusal_prime, smoothllm, token_anomaly 0.01 0.52 
+
+--- row-based selection (composition rule 2) ---
+ size                                                      members  ASR  FRR
+    1                                                   llamaguard 0.01 0.26
+    2                                    llamaguard, token_anomaly 0.01 0.27
+    3                         llamaguard, token_anomaly, smoothllm 0.01 0.41
+    4                llamaguard, token_anomaly, smoothllm, probe_b 0.01 0.41
+    5 llamaguard, token_anomaly, smoothllm, probe_b, refusal_prime 0.01 0.52 
+
+--- Cochran-Mantel-Haenszel, all pairs, stratified by difficulty ---
+(difficulty computed from the other defenses only, so it is
+ independent of the pair under test; q is Benjamini-Hochberg)
+           d1            d2  crude_OR  CMH_OR     p  n_strata  min_stratum     q
+   llamaguard    ppl_filter       inf     inf   NaN         6            6   NaN
+   llamaguard         probe       inf     inf 0.039         6            6 0.195
+   llamaguard       probe_b       inf     inf 0.039         6            5 0.195
+   llamaguard refusal_prime       inf     inf 0.289         6            6 0.579
+   llamaguard     smoothllm       inf     inf 0.390         6            5 0.705
+   llamaguard token_anomaly       inf     inf 0.906         6            6 0.940
+        probe       probe_b    87.000 151.368 0.000         5           10 0.000
+refusal_prime     smoothllm    13.143   4.273 0.025         5           10 0.195
+   ppl_filter refusal_prime    15.725   3.947 0.063         5           10 0.251
+   ppl_filter     smoothllm    16.718   3.370 0.160         5           10 0.533
+   ppl_filter       probe_b    21.000   3.067 0.211         5           10 0.579
+   ppl_filter         probe    17.400   2.829 0.247         5            6 0.579
+      probe_b token_anomaly     7.000   2.564 0.276         5            8 0.579
+    smoothllm token_anomaly     4.750   1.742 0.423         5            5 0.705
+   ppl_filter token_anomaly     6.643   1.377 0.922         5            8 0.940
+refusal_prime token_anomaly     4.125   1.317 0.820         5            6 0.940
+        probe     smoothllm    10.400   1.250 0.935         5            8 0.940
+        probe token_anomaly     5.865   1.037 0.759         5            8 0.940
+      probe_b     smoothllm     8.250   0.912 0.839         5            7 0.940
+      probe_b refusal_prime     7.509   0.873 0.874         5            9 0.940
+        probe refusal_prime     7.667   0.716 0.940         5            7 0.940 
+
+wrote fusion_results.tex, fusion_diversity.csv, fusion_combination_rules.csv, fusion_cmh_all_pairs.csv

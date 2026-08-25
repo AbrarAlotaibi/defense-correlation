@@ -1,0 +1,10 @@
+{
+ "floor_n": 8,
+ "n_nonfloor": 92,
+ "pairs_measurable": 10,
+ "pairs_degenerate": 11,
+ "mean_phi_excl_floor": 0.056,
+ "min_phi_excl_floor": -0.075,
+ "max_phi_excl_floor": 0.46,
+ "positive": 4
+}

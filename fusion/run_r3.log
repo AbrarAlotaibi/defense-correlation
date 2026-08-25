@@ -1,0 +1,78 @@
+=== SELF-CHECK: phi_behaviour against the published values ===
+                         pair  recomputed  published  diff
+              probe x probe_b      0.7527     0.7527  -0.0
+           ppl_filter x probe      0.5937     0.5937   0.0
+        probe x token_anomaly      0.3236     0.3236   0.0
+   ppl_filter x token_anomaly      0.3496     0.3496   0.0
+         ppl_filter x probe_b      0.6205     0.6205   0.0
+   ppl_filter x refusal_prime      0.5774     0.5774   0.0
+       ppl_filter x smoothllm      0.5659     0.5659  -0.0
+    refusal_prime x smoothllm      0.5570     0.5570   0.0
+            probe x smoothllm      0.4852     0.4852  -0.0
+          probe_b x smoothllm      0.4751     0.4751  -0.0
+      probe_b x refusal_prime      0.4583     0.4583   0.0
+        probe x refusal_prime      0.4463     0.4463   0.0
+      probe_b x token_anomaly      0.3852     0.3852  -0.0
+    smoothllm x token_anomaly      0.3407     0.3407   0.0
+refusal_prime x token_anomaly      0.2996     0.2996  -0.0
+   llamaguard x token_anomaly      0.1370     0.1370  -0.0
+       llamaguard x smoothllm      0.0928     0.0928  -0.0
+         llamaguard x probe_b      0.0821     0.0821  -0.0
+   llamaguard x refusal_prime      0.0821     0.0821  -0.0
+      llamaguard x ppl_filter      0.0721     0.0721   0.0
+           llamaguard x probe      0.0689     0.0689   0.0
+pairs compared: 21 of 21; max |diff| = 0.00e+00
+self-check passed: the assembly reproduces the published table
+
+sources  : ['adaptive:llamaguard', 'adaptive:ppl_filter', 'adaptive:probe', 'adaptive:probe_b', 'adaptive:refusal_prime', 'adaptive:smoothllm', 'adaptive:token_anomaly', 'static:plain', 'static:transfer']
+defenses : ['llamaguard', 'ppl_filter', 'probe', 'probe_b', 'refusal_prime', 'smoothllm', 'token_anomaly']
+behaviours: 100
+
+--- cells present (rows = prompt set, cols = defense evaluated) ---
+defense                 llamaguard  ppl_filter  probe  probe_b  refusal_prime  smoothllm  token_anomaly
+source                                                                                                 
+adaptive:llamaguard              1           0      0        0              0          0              0
+adaptive:ppl_filter              0           1      0        0              0          0              0
+adaptive:probe                   0           0      1        0              0          0              0
+adaptive:probe_b                 0           0      0        1              0          0              0
+adaptive:refusal_prime           0           0      0        0              1          0              0
+adaptive:smoothllm               0           0      0        0              0          1              0
+adaptive:token_anomaly           0           0      0        0              0          0              1
+static:plain                     1           1      1        1              1          1              1
+static:transfer                  1           1      1        1              1          1              1 
+
+--- phi under each estimand ---
+           d1            d2   p1   p2  phi_behaviour  phi_input_src_d1  phi_input_src_d2  phi_static:plain  phi_static:transfer
+   llamaguard    ppl_filter 0.01 0.66          0.072               NaN               NaN               NaN                  NaN
+   llamaguard         probe 0.01 0.68          0.069               NaN               NaN               NaN                  NaN
+   llamaguard       probe_b 0.01 0.60          0.082               NaN               NaN               NaN                  NaN
+   llamaguard refusal_prime 0.01 0.60          0.082               NaN               NaN               NaN                  NaN
+   llamaguard     smoothllm 0.01 0.54          0.093               NaN               NaN               NaN                  NaN
+   llamaguard token_anomaly 0.01 0.35          0.137               NaN               NaN               NaN                  NaN
+   ppl_filter         probe 0.66 0.68          0.594               NaN               NaN             0.930                  NaN
+   ppl_filter       probe_b 0.66 0.60          0.621               NaN               NaN             0.921                  NaN
+   ppl_filter refusal_prime 0.66 0.60          0.577               NaN               NaN             0.641                  NaN
+   ppl_filter     smoothllm 0.66 0.54          0.566               NaN               NaN             0.261                  NaN
+   ppl_filter token_anomaly 0.66 0.35          0.350               NaN               NaN             1.000                  NaN
+        probe       probe_b 0.68 0.60          0.753               NaN               NaN             0.857                0.901
+        probe refusal_prime 0.68 0.60          0.446               NaN               NaN             0.596                0.421
+        probe     smoothllm 0.68 0.54          0.485               NaN               NaN             0.236                0.327
+        probe token_anomaly 0.68 0.35          0.324               NaN               NaN             0.930                0.851
+      probe_b refusal_prime 0.60 0.60          0.458               NaN               NaN             0.696                0.421
+      probe_b     smoothllm 0.60 0.54          0.475               NaN               NaN             0.291                0.327
+      probe_b token_anomaly 0.60 0.35          0.385               NaN               NaN             0.921                0.950
+refusal_prime     smoothllm 0.60 0.54          0.557               NaN               NaN             0.202                0.581
+refusal_prime token_anomaly 0.60 0.35          0.300               NaN               NaN             0.641                0.421
+    smoothllm token_anomaly 0.54 0.35          0.341               NaN               NaN             0.261                0.327 
+
+phi_input_src_d1: no measurable pairs
+phi_input_src_d2: no measurable pairs
+phi_static:plain: n=15, mean shift vs phi_behaviour +0.144 (range -0.355 to +0.650), same sign 15/15, positive 15/15
+phi_static:transfer: n=10, mean shift vs phi_behaviour +0.101 (range -0.158 to +0.565), same sign 10/10, positive 10/10
+
+wrote r3_results.tex, r3_estimand_comparison.csv
+
+READ THE SIGN COLUMN FIRST. If phi_input is positive for the same pairs
+as phi_behaviour, the composition conclusion holds under both estimands and
+R3 becomes a clarification. If the two disagree in sign anywhere, the
+behaviour-level framing has to be argued rather than assumed.

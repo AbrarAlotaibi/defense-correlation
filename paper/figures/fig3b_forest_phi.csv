@@ -1,0 +1,16 @@
+pair,phi,boot_lo,boot_hi,grader_lo,grader_hi
+refusal prime × token anomaly,0.300,0.121,0.471,0.291,0.438
+probe L16 × token anomaly,0.324,0.155,0.478,0.288,0.445
+SmoothLLM × token anomaly,0.341,0.160,0.516,0.298,0.448
+perplexity × token anomaly,0.350,0.181,0.501,0.274,0.436
+probe L8 × token anomaly,0.385,0.216,0.541,0.284,0.441
+probe L16 × refusal prime,0.446,0.260,0.620,0.473,0.670
+probe L8 × refusal prime,0.458,0.279,0.633,0.479,0.670
+probe L8 × SmoothLLM,0.475,0.299,0.641,0.382,0.578
+probe L16 × SmoothLLM,0.485,0.313,0.647,0.377,0.590
+refusal prime × SmoothLLM,0.557,0.393,0.714,0.496,0.701
+perplexity × SmoothLLM,0.566,0.403,0.718,0.415,0.605
+perplexity × refusal prime,0.577,0.407,0.735,0.477,0.679
+perplexity × probe L16,0.594,0.417,0.755,0.544,0.743
+perplexity × probe L8,0.621,0.452,0.771,0.513,0.723
+probe L16 × probe L8,0.753,0.622,0.876,0.605,0.805
