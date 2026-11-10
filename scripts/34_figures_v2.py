@@ -103,8 +103,6 @@ def fig_attack_class(res: dict, out: Path):
     ax.set_xlabel("residual attack success rate")
     ax.set_xlim(0, 1.06)
     ax.xaxis.grid(True); ax.yaxis.grid(False)
-    ax.set_title("A safeguard's measured strength depends on the attack it faces",
-                 loc="left", pad=20)
     ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0, 1, 0.1), ncol=len(fams),
               mode="expand", borderaxespad=0)
     _finish(fig, out, "fig1_attack_class")
@@ -135,10 +133,8 @@ def fig_null_forest(res: dict, out: Path):
     ax.plot(mid, y, "o", ms=4.5, color=BLUE, mec="white", mew=0.8, zorder=4)
     ax.set_yticks(y, labels)
     ax.set_ylim(-1.4, len(items) - 0.4)
-    ax.set_xlabel(r"$\phi$ between safeguard failures (behaviour level)")
+    ax.set_xlabel(r"$\phi$ between safeguard failures (behavior level)")
     ax.yaxis.grid(False)
-    ax.set_title("Pairwise diversity, against the correlation the attack produces on its own",
-                 loc="left")
     _finish(fig, out, "fig2_null_forest")
 
 
@@ -156,11 +152,10 @@ def fig_difficulty(res: dict, out: Path):
     ax.text(lim * 0.97, lim * 0.97, "difficulty explains it all", fontsize=7, color=MUTED,
             ha="right", va="bottom", rotation=45, rotation_mode="anchor")
     ax.plot(pred, obs, "o", ms=5, color=BLUE, mec="white", mew=0.8, zorder=3)
-    ax.set_xlabel(r"$\phi$ predicted by behaviour difficulty alone")
+    ax.set_xlabel(r"$\phi$ predicted by behavior difficulty alone")
     ax.set_ylabel(r"observed $\phi$")
     ax.set_xlim(0, lim); ax.set_ylim(0, lim); ax.set_aspect("equal")
     icc = (d.get("fit") or {}).get("icc")
-    ax.set_title("How much is difficulty?" + (f"  (ICC {icc:.2f})" if icc else ""), loc="left")
     _finish(fig, out, "fig3_difficulty")
 
 
@@ -180,10 +175,9 @@ def fig_estimands(res: dict, out: Path):
     lim = max(max(x, default=0), max(y, default=0), 0.1) * 1.15
     ax.plot([0, lim], [0, lim], color=MUTED, lw=1.0, ls="--", zorder=2)
     ax.plot(x, y, "s", ms=5, color=ORANGE, mec="white", mew=0.8, zorder=3)
-    ax.set_xlabel(r"E1: behaviour level, separate searches")
+    ax.set_xlabel(r"E1: behavior level, separate searches")
     ax.set_ylabel(r"E2: prompt level, shared input")
     ax.set_xlim(0, lim); ax.set_ylim(0, lim); ax.set_aspect("equal")
-    ax.set_title("The two estimands are not the same quantity", loc="left")
     _finish(fig, out, "fig4_estimands")
 
 
@@ -210,7 +204,6 @@ def fig_refusal(res: dict, out: Path):
     ax.set_xlabel("false refusal rate")
     ax.set_xlim(0, 1.0)
     ax.yaxis.grid(False)
-    ax.set_title("What depth costs on benign traffic", loc="left", pad=20)
     ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0, 1, 0.1), ncol=len(sets),
               mode="expand", borderaxespad=0)
     _finish(fig, out, "fig5_refusal")
