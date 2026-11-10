@@ -128,7 +128,7 @@ class LinearProbeB(LinearProbe):
     the GCG attack, so its marginal ASR is 0 and phi is undefined. The probe row is the one
     with a healthy non-zero marginal, so a second probe - same mechanism class (reading the
     residual stream), different depth - gives a within-row pair with two live marginals.
-    See PREREGISTRATION.md amendment.
+    See earlier_version/PREREGISTRATION.md amendment.
 
     Takes its own forward pass at its own layer (`use_shared_pass = False`) so it cannot
     collide with the primary probe's layer during a stacked run.

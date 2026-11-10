@@ -9,8 +9,8 @@ for r in csv.DictReader(open('results/hpc_vicuna_autodan/table6.csv')):
     orig[frozenset((r['d1'], r['d2']))] = (float(r['phi']), float(r['p1']), float(r['p2']),
                                            float(r['excess']))
 
-maj = list(csv.DictReader(open('fusion/taskB/B3_table10_majority.csv')))
-gr = {r['pair']: r for r in csv.DictReader(open('fusion/taskB/B4_grader_intervals.csv'))}
+maj = list(csv.DictReader(open('earlier_version/fusion/taskB/B3_table10_majority.csv')))
+gr = {r['pair']: r for r in csv.DictReader(open('earlier_version/fusion/taskB/B4_grader_intervals.csv'))}
 
 print("phi: published single-judgment vs majority-of-5, and whether the published value")
 print("falls inside the grader-only interval\n")

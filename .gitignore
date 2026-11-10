@@ -20,6 +20,7 @@ Thumbs.db
 
 # --- secrets / local environments (never part of the reproducible run) ---
 .env
+.env.path
 *.env
 !*.env.example
 .venv/

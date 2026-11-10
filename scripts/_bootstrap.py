@@ -23,11 +23,21 @@ if str(REPO_ROOT) not in sys.path:
 _SECRET_KEYS = ("HUGGING_FACE_HUB_TOKEN", "HF_TOKEN", "OPENAI_API_KEY")
 
 
+def _pointer() -> Path:
+    """An env file kept outside the repository, named in the git-ignored file .env.path."""
+    p = REPO_ROOT / ".env.path"
+    try:
+        return Path(p.read_text(encoding="utf-8").strip()) if p.is_file() else Path("")
+    except OSError:
+        return Path("")
+
+
 def _from_env_file() -> dict[str, str]:
     out: dict[str, str] = {}
     candidates = [
         Path(os.environ.get("DCORR_ENV", "")),
         REPO_ROOT / ".env",
+        _pointer(),
     ]
     for cand in candidates:
         if cand and str(cand) not in ("", ".") and cand.is_file():

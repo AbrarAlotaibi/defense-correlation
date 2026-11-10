@@ -10,11 +10,11 @@ CONVENTIONS, matched to the request:
   * intervals        10,000-resample bootstrap percentile over behaviours.
   * precision        three decimals.
 
-Outputs land in fusion/manuscript/ as CSV, one file per item, plus manifest.json.
+Outputs land in earlier_version/fusion/manuscript/ as CSV, one file per item, plus manifest.json.
 
 Usage:
-  python scripts/11_manuscript_numbers.py --fusion fusion --run results/hpc_vicuna_autodan \
-      --out fusion/manuscript
+  python scripts/11_manuscript_numbers.py --fusion earlier_version/fusion --run results/hpc_vicuna_autodan \
+      --out earlier_version/fusion/manuscript
 """
 from __future__ import annotations
 

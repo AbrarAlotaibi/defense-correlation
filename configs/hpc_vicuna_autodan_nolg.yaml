@@ -7,7 +7,7 @@
 #
 # Removing it makes the check informative. Over the remaining six defenses the intersection
 # over the stored per-defense breach vectors predicts a residual of 0.190 (the k=1 row of
-# fusion/manuscript/B1_k_of_n_no_llamaguard.csv), so a direct attack on the assembled
+# earlier_version/fusion/manuscript/B1_k_of_n_no_llamaguard.csv), so a direct attack on the assembled
 # six-layer stack has a non-trivial target to agree or disagree with.
 #
 # Everything else is identical to hpc_vicuna_autodan.yaml. The thresholds are NOT

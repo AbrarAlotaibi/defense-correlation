@@ -8,7 +8,7 @@ defenses plus the assembled stack, 100/100 behaviours, no fatal errors, judged p
 ```bash
 python scripts/22_task_d_external.py --primary results/hpc_vicuna_autodan \
     --external results/hpc_vicuna_autodan_extthr \
-    --config configs/hpc_vicuna_autodan.yaml --out fusion/taskD
+    --config configs/hpc_vicuna_autodan.yaml --out earlier_version/fusion/taskD
 ```
 
 Both threshold sets are reported side by side; neither replaces the other.

@@ -17,8 +17,8 @@ D2 - intersection versus direct, with resolution.
 Usage:
   python scripts/13_b3_d2_analysis.py --primary results/hpc_vicuna_autodan \
       --nolg results/hpc_vicuna_autodan_nolg --config configs/hpc_vicuna_autodan.yaml \
-      --prediction fusion/manuscript/D2_intersection_prediction.json \
-      --out fusion/manuscript
+      --prediction earlier_version/fusion/manuscript/D2_intersection_prediction.json \
+      --out earlier_version/fusion/manuscript
 """
 from __future__ import annotations
 

@@ -12,7 +12,7 @@ the precision of all of them, and it is not included in any reported interval.
 
 Usage:
   python scripts/16_judge_determinism.py --a results/hpc_vicuna_autodan \
-      --b results/hpc_vicuna_autodan_nolg --defense undefended --out fusion/manuscript
+      --b results/hpc_vicuna_autodan_nolg --defense undefended --out earlier_version/fusion/manuscript
 """
 from __future__ import annotations
 

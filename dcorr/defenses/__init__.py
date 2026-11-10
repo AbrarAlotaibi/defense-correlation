@@ -1,4 +1,4 @@
-"""Defense registry. Row assignments live in the config and in PREREGISTRATION.md."""
+"""Defense registry. Row assignments live in the config and in earlier_version/PREREGISTRATION.md."""
 from __future__ import annotations
 
 from .base import Defense, FilterOut, REFUSAL_TEXT
@@ -22,7 +22,7 @@ REGISTRY: dict[str, type[Defense]] = {
     "probe_b": LinearProbeB,
 }
 
-# Row assignment of record. Must agree with configs/*.yaml and PREREGISTRATION.md;
+# Row assignment of record. Must agree with configs/*.yaml and earlier_version/PREREGISTRATION.md;
 # build_defenses() asserts that.
 ROWS: dict[str, str] = {
     "ppl_filter": "token_surface",

@@ -2,8 +2,8 @@
 import csv, io, json, re
 
 R = 'results/hpc_vicuna_autodan/'
-M = 'fusion/manuscript/'
-tex = {f: io.open('paper/' + f, encoding='utf-8').read()
+M = 'earlier_version/fusion/manuscript/'
+tex = {f: io.open('earlier_version/paper/' + f, encoding='utf-8').read()
        for f in ('results_insert.tex', 'fusion_insert.tex', 'estimand_insert.tex',
                  'robustness_insert.tex')}
 allt = "\n".join(tex.values())
@@ -99,8 +99,8 @@ want("undefined", "CMH undefined, not refuted", 'robustness_insert.tex')
 import os
 for fig in ('fig3b_forest_phi.pdf', 'fig5_regimes_phi.pdf'):
     checks += 1
-    if not os.path.isfile('paper/figures/' + fig):
-        fails.append(f"missing figure paper/figures/{fig}")
+    if not os.path.isfile('earlier_version/paper/figures/' + fig):
+        fails.append(f"missing figure earlier_version/paper/figures/{fig}")
 # The manuscript's 2.4% of 2700 is CORRECT; an earlier "correction" here was not.
 # gold.jsonl has 2700 rows of which 1887 were judged, so both denominators must appear.
 want("$66$ of the $2700$ graded", "C4 manuscript figure retained", 'results_insert.tex')

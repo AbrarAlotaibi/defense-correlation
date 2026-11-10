@@ -14,7 +14,7 @@ series distinguished by shape as well as colour, no titles, vector PDF with the 
 it as CSV.
 
 Usage:
-  python scripts/23_robustness_figures.py --out paper/figures
+  python scripts/23_robustness_figures.py --out earlier_version/paper/figures
 """
 from __future__ import annotations
 
@@ -63,13 +63,13 @@ def load():
             continue
         single[key(r["d1"], r["d2"])] = (float(r["phi"]), float(r["phi_lo"]),
                                          float(r["phi_hi"]))
-    for r in csv.DictReader(open("fusion/taskB/B4_grader_intervals.csv")):
+    for r in csv.DictReader(open("earlier_version/fusion/taskB/B4_grader_intervals.csv")):
         a, b = [CANON[x.strip()] for x in r["pair"].split(" x ")]
         grader[key(a, b)] = (float(r["phi_grader_lo"]), float(r["phi_grader_hi"]))
-    for r in csv.DictReader(open("fusion/taskB/B3_table10_majority.csv")):
+    for r in csv.DictReader(open("earlier_version/fusion/taskB/B3_table10_majority.csv")):
         a, b = [CANON[x.strip()] for x in r["pair"].split(" x ")]
         majority[key(a, b)] = float(r["phi"])
-    for r in csv.DictReader(open("fusion/taskD/D3_table10_external.csv")):
+    for r in csv.DictReader(open("earlier_version/fusion/taskD/D3_table10_external.csv")):
         a, b = [CANON[x.strip()] for x in r["pair"].split(" x ")]
         external[key(a, b)] = float(r["phi"])
     return single, grader, majority, external
@@ -169,7 +169,7 @@ def fig_regimes(single, majority, external, out: Path):
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", default="paper/figures", type=Path)
+    ap.add_argument("--out", default="earlier_version/paper/figures", type=Path)
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
     single, grader, majority, external = load()

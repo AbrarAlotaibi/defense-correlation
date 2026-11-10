@@ -11,7 +11,7 @@ internal run names in any artwork, no gridlines except a light y-grid on the for
 
 Usage:
   python scripts/make_figures.py --fluent results/hpc_vicuna_autodan \
-      --suffix results/hpc_vicuna --out paper/figures
+      --suffix results/hpc_vicuna --out earlier_version/paper/figures
 """
 from __future__ import annotations
 
@@ -222,7 +222,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--fluent", required=True, help="run dir for the fluent-attack results")
     ap.add_argument("--suffix", required=True, help="run dir for the suffix-attack results")
-    ap.add_argument("--out", default="paper/figures")
+    ap.add_argument("--out", default="earlier_version/paper/figures")
     ap.add_argument("--drop-pairs-with", nargs="*", default=["llamaguard"],
                     help="defenses excluded from the PAIR figures (near-zero marginal -> "
                          "uninformative phi); they remain in the attack-class figure")

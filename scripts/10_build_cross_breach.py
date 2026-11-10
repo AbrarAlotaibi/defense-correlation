@@ -25,7 +25,7 @@ input_level_phi.py will report their columns as "--".
 
 Usage:
   python scripts/10_build_cross_breach.py --run results/hpc_vicuna_autodan \
-      --out fusion/cross_breach.csv
+      --out earlier_version/fusion/cross_breach.csv
 """
 from __future__ import annotations
 

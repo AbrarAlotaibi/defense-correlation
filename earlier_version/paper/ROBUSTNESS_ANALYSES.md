@@ -16,7 +16,7 @@ grader-prompt SHA-256 and model are in each output directory's `meta.json`.
 
 ---
 
-## Task A — analyses on existing data · `fusion/taskA/`
+## Task A — analyses on existing data · `earlier_version/fusion/taskA/`
 
 | Quantity | File |
 | --- | --- |
@@ -48,7 +48,7 @@ per-defense breach vector and no pair φ can be recomputed. Task B is what answe
 
 ---
 
-## Task B — grader variance · `fusion/taskB/`
+## Task B — grader variance · `earlier_version/fusion/taskB/`
 
 9,435 judgments: every one of the 1,887 graded responses scored 5 times under an unchanged
 rubric, model and temperature. (813 further rows are blocked and never reach the grader.)
@@ -81,7 +81,7 @@ nothing here establishes.
 > overlapping grader intervals**. The caveat is now empirically grounded rather than
 > precautionary.
 
-**Downstream effects** (`fusion/breach_majority.csv`, `fusion/fusion_*_majority.csv`):
+**Downstream effects** (`earlier_version/fusion/breach_majority.csv`, `earlier_version/fusion/fusion_*_majority.csv`):
 probe₈ overtakes probe₁₆ on marginal ASR, which breaks the row-vs-greedy agreement from size 3
 onward; and difficulty stratification goes from **1 surviving pair to 3**, with the probe
 pair's common odds ratio falling from 158.7 to 11.76.
@@ -100,7 +100,7 @@ is not a substitute for C.
 
 ---
 
-## Task D — threshold transfer · `fusion/taskD/`
+## Task D — threshold transfer · `earlier_version/fusion/taskD/`
 
 Full re-run of the primary configuration (7:34:49 on one H100, exit 0) with every threshold set
 on 805 external AlpacaEval instructions, disjoint from both the evaluation set and the probe's
@@ -174,7 +174,7 @@ conservative estimate" overstates the claim; "for thirteen of the fifteen pairs"
 
 ## What this changes in the manuscript
 
-`paper/robustness_insert.tex` carries all of the above; the other inserts were edited to match.
+`earlier_version/paper/robustness_insert.tex` carries all of the above; the other inserts were edited to match.
 
 1. **The composition result is reinforced.** It survives permutation inference, majority-of-five
    grader labels, and external thresholds. Minimum φ across the entire grid is **0.300**.

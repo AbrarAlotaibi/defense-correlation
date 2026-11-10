@@ -10,3 +10,4 @@
 
 # Collapse the notebook in GitHub diffs.
 *.ipynb linguist-generated=false
+*.bat text eol=crlf

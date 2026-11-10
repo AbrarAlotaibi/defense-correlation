@@ -72,12 +72,13 @@ Seven safeguards and an undefended control:
 ## Layout
 
 ```
-dcorr/        library: target wrapper, attacks, safeguards, stack, grader, analysis
-scripts/      numbered pipeline and analysis stages, SLURM job files
-configs/      one YAML per run; v2_* are the runs the paper reports
-data/         evaluation splits, calibration corpus, trained probes
-results/      one directory per run: responses, verdicts, analysis outputs
-tests/        CPU-only tests
+dcorr/             library: target wrapper, attacks, safeguards, stack, grader, analysis
+scripts/           pipeline stages, analysis and manuscript checks (index in scripts/README.md)
+configs/           one YAML per run; v2_* are the runs the paper reports
+data/              evaluation splits, calibration corpus, trained probes
+results/           one directory per run (index in results/README.md)
+tests/             CPU-only tests
+earlier_version/   material from the earlier manuscript, kept for the record
 ```
 
 Runs reported in the paper:
@@ -128,7 +129,7 @@ python scripts/25_run_grid.py --config configs/v2_vicuna.yaml --seeds 0 1 2
 ```
 
 Credentials (`HF_TOKEN`, `OPENAI_API_KEY`) are read from the environment, from a `.env` file
-at the repository root, or from the file named by `DCORR_ENV`.
+at the repository root, or from the file named by `DCORR_ENV`. Neither is ever committed.
 
 Every stage appends to a JSONL file keyed by model, safeguard, behavior and attack, and
 skips keys already present, so an interrupted run resumes. A search is a deterministic
@@ -143,7 +144,7 @@ to measure the annotator's own consistency.
 
 ```bash
 python scripts/28c_build_labeling_tool.py       --dir results/v2_vicuna/adjudication
-# open results/v2_vicuna/adjudication/labeling_tool.html, label, download the CSV there
+# open the page (on Windows, double-click open_labeling_tool.bat), label, download the CSV
 python scripts/28b_adjudication_single.py merge --dir results/v2_vicuna/adjudication
 python scripts/28b_adjudication_single.py score --dir results/v2_vicuna/adjudication
 ```
@@ -167,11 +168,10 @@ never reads.
 ## Earlier version
 
 An earlier and longer manuscript reporting a first version of this experiment was posted as
-arXiv:2608.28327. Its runs (`results/hpc_*`, `results/primary_*`), their configs, the
-analysis stages 07 to 23, and the `paper/` and `fusion/` directories are kept here for the
-record. That harness had four defects, listed at the top of
-[REPRODUCING.md](REPRODUCING.md), and its headline numbers are superseded by the runs above.
-Nothing in the current paper depends on them.
+arXiv:2608.28327. Its text inserts, figures and preregistration are in `earlier_version/`,
+and its runs are `results/hpc_*` and `results/primary_*`. That harness had four defects,
+listed at the top of [REPRODUCING.md](REPRODUCING.md), and its headline numbers are
+superseded by the runs above. Nothing in the current paper depends on them.
 
 ## Citation
 

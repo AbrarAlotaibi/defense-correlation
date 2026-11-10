@@ -4,7 +4,7 @@ Every number below is generated from artifacts tracked in this repository. Regen
 Sections A, B and C with:
 
 ```bash
-python scripts/11_manuscript_numbers.py --fusion fusion --run results/hpc_vicuna_autodan --out fusion/manuscript
+python scripts/11_manuscript_numbers.py --fusion earlier_version/fusion --run results/hpc_vicuna_autodan --out earlier_version/fusion/manuscript
 ```
 
 **Conventions.** Primary configuration throughout
@@ -30,7 +30,7 @@ Multiplicity is Benjamini–Hochberg over the 15 non-degenerate pairs. Intervals
 
 Strata: 5, minimum stratum size 8. Stratifier is the count of the other live defenses breached
 on that behaviour, so it is independent of the pair under test — the same one used for the
-other six rows. Source: `fusion/manuscript/A1_B4a_cmh_15pairs.csv`.
+other six rows. Source: `earlier_version/fusion/manuscript/A1_B4a_cmh_15pairs.csv`.
 
 > **This changes what H1 can claim.**
 > The pre-registered same-row pair does **not** survive stratification: its crude OR of 6.014
@@ -64,7 +64,7 @@ other six rows. Source: `fusion/manuscript/A1_B4a_cmh_15pairs.csv`.
 
 FRR is flat at 0.080 from k = 4 onward: no benign prompt is refused by four or more members
 simultaneously, so the floor is the single most-refusing configuration's contribution.
-`fusion/manuscript/B1_k_of_n_full.csv`; the six-defense version is alongside it.
+`earlier_version/fusion/manuscript/B1_k_of_n_full.csv`; the six-defense version is alongside it.
 
 ### B2. Selection at sizes 5 and 6, and the row-based ceiling
 
@@ -119,7 +119,7 @@ else: their entire reported false-refusal cost is the base model.
 > (mean φ 0.573, 21/21 positive). The measurement was right; the reading was not. Removing the 8 floor prompts collapses it — 11 of 21 pairs go
 > degenerate, and across the remaining 10 the mean φ falls to **0.056** with 4/10 positive.
 > The φ = 1.000 for perplexity × probe₁₆ is not a small-count artefact, it is the floor:
-> identical vectors. `fusion/README.md` §5 and `paper/fusion_insert.tex` are corrected.
+> identical vectors. `earlier_version/fusion/README.md` §5 and `earlier_version/paper/fusion_insert.tex` are corrected.
 > The benign side shows a shared common cause, not a shared mechanism — the same shape the
 > CMH stratification gives on the harmful side.
 
@@ -127,10 +127,10 @@ else: their entire reported false-refusal cost is the base model.
 
 | Item | File |
 | --- | --- |
-| all 21 CMH rows, Llama Guard included | `fusion/manuscript/B4a_cmh_all21pairs.csv` |
-| all 21 diversity rows with intervals | `fusion/manuscript/B4b_B5_diversity_all21_with_ci.csv` |
-| 21-pair benign-refusal φ, long form | `fusion/manuscript/B4c_benign_refusal_phi_21pairs.csv` |
-| the same as a 7×7 matrix | `fusion/manuscript/B4c_benign_refusal_phi_matrix.csv` |
+| all 21 CMH rows, Llama Guard included | `earlier_version/fusion/manuscript/B4a_cmh_all21pairs.csv` |
+| all 21 diversity rows with intervals | `earlier_version/fusion/manuscript/B4b_B5_diversity_all21_with_ci.csv` |
+| 21-pair benign-refusal φ, long form | `earlier_version/fusion/manuscript/B4c_benign_refusal_phi_21pairs.csv` |
+| the same as a 7×7 matrix | `earlier_version/fusion/manuscript/B4c_benign_refusal_phi_matrix.csv` |
 
 The Llama Guard degeneracy is now on the record rather than asserted: all six of its CMH rows
 return an infinite odds ratio and one returns an undefined p, and all six of its Q values sit
@@ -150,7 +150,7 @@ All three now carry 10,000-resample bootstrap intervals on the same footing as �
 
 ## C. Reproducibility block
 
-Full machine-readable version: `fusion/manuscript/C_reproducibility.json`. Everything is
+Full machine-readable version: `earlier_version/fusion/manuscript/C_reproducibility.json`. Everything is
 copied from `resolved_config.yaml` and `calibration.json`, both now tracked in the repo.
 
 ### C1. Attack configuration
@@ -247,7 +247,7 @@ same quantity.
 
 ### D1. Input-level φ, tier 0
 
-Summary lines, verbatim from `fusion/run_r3.log`:
+Summary lines, verbatim from `earlier_version/fusion/run_r3.log`:
 
 ```
 phi_static:plain:    n=15, mean shift vs phi_behaviour +0.144, same sign 15/15, positive 15/15
@@ -255,12 +255,12 @@ phi_static:transfer: n=10, mean shift vs phi_behaviour +0.101, same sign 10/10, 
 ```
 
 **The self-check passes exactly**: restricted to the diagonal it reproduces all 21 published φ
-values to 0.00e+00. Full table in `fusion/r3_estimand_comparison.csv`; write-up in
-`paper/estimand_insert.tex`.
+values to 0.00e+00. Full table in `earlier_version/fusion/r3_estimand_comparison.csv`; write-up in
+`earlier_version/paper/estimand_insert.tex`.
 
 Two bugs in the script were fixed to get here — `main()` never called `selfcheck()`,
 and `analyse()` computed the shared-column intervals then discarded them. Both are documented
-in `fusion/README.md` §7.
+in `earlier_version/fusion/README.md` §7.
 
 ### D3. External benign calibration — the sharpest result in this batch
 
@@ -321,7 +321,7 @@ false-refusal side only.
 ### D2. Intersection versus direct, with resolution — the assumption fails
 
 Job 2316052, `COMPLETED` in 3:41:20, 100/100 behaviours, no fatal errors. Judged post hoc on
-the login node (600 verdicts). Artifact: `fusion/manuscript/D2_intersection_vs_direct.json`.
+the login node (600 verdicts). Artifact: `earlier_version/fusion/manuscript/D2_intersection_vs_direct.json`.
 
 | | |
 | --- | --- |
@@ -386,7 +386,7 @@ is the grader returning different rubric scores for identical text.
 > Correlations should be more robust than levels — φ is relational and both members shift
 > together — but that is an argument, not a measurement, and it was not tested here.
 >
-> Artifact: `fusion/manuscript/judge_determinism.json`, regenerate with
+> Artifact: `earlier_version/fusion/manuscript/judge_determinism.json`, regenerate with
 > `scripts/16_judge_determinism.py`.
 
 
@@ -406,7 +406,7 @@ decision rule.
 
 ## E. Bibliography and repository
 
-- **Five bibliography entries** — `paper/references_added.bib`. Metadata pulled from
+- **Five bibliography entries** — `earlier_version/paper/references_added.bib`. Metadata pulled from
   the arXiv API rather than transcribed, so titles, full author lists and years are as arXiv
   reports them:
 
@@ -439,10 +439,10 @@ passing). Re-run it after any edit.
 
 | Insert | Status |
 | --- | --- |
-| `paper/results_insert.tex` | updated — 8 edits |
-| `paper/fusion_insert.tex` | updated — 4 edits |
-| `paper/estimand_insert.tex` | current as written |
-| `paper/references_added.bib` | 5 entries, from the arXiv API |
+| `earlier_version/paper/results_insert.tex` | updated — 8 edits |
+| `earlier_version/paper/fusion_insert.tex` | updated — 4 edits |
+| `earlier_version/paper/estimand_insert.tex` | current as written |
+| `earlier_version/paper/references_added.bib` | 5 entries, from the arXiv API |
 
 ### Substantive claims the analyses above changed
 

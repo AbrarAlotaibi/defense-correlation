@@ -75,7 +75,7 @@ judge:
   reps: 1
   # Byte-exactness of the rubric text vs the official StrongREJECT repo is asserted at load
   # time via SHA-256. The prompt is now the official one, so this is enforced. See
-  # PREREGISTRATION.md section 6.
+  # earlier_version/PREREGISTRATION.md section 6.
   require_official_prompt: true
 
 refusal:

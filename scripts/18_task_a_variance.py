@@ -14,7 +14,7 @@ matrix, 15 for the measurable-pair analyses that exclude Llama Guard.
 Usage:
   python scripts/18_task_a_variance.py --primary results/hpc_vicuna_autodan \
       --nolg results/hpc_vicuna_autodan_nolg --config configs/hpc_vicuna_autodan.yaml \
-      --out fusion/taskA
+      --out earlier_version/fusion/taskA
 """
 from __future__ import annotations
 

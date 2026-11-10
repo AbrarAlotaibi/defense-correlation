@@ -18,7 +18,7 @@ by hand.
 
 Usage:
   python scripts/09_build_fusion_inputs.py --run results/hpc_vicuna_autodan \
-      --config configs/hpc_vicuna_autodan.yaml --out fusion/ --verify-frr
+      --config configs/hpc_vicuna_autodan.yaml --out earlier_version/fusion/ --verify-frr
 """
 from __future__ import annotations
 

@@ -7,7 +7,7 @@ blocked rows that never reach the grader. Raw judgments in
 
 ```bash
 python scripts/19_rejudge_multi.py --config configs/hpc_vicuna_autodan.yaml --reps 5
-python scripts/20_task_b_grader_variance.py --run results/hpc_vicuna_autodan --out fusion/taskB
+python scripts/20_task_b_grader_variance.py --run results/hpc_vicuna_autodan --out earlier_version/fusion/taskB
 ```
 
 Provenance (seed, prompt SHA-256, judge model, family sizes) is in `meta.json`. BH over the
@@ -86,7 +86,7 @@ with this number attached rather than removed.
 ## Follow-up: what changes when the downstream analyses are re-derived
 
 Task B's marginal shifts are not cosmetic. Re-running the fusion analyses on majority-vote
-labels (`fusion/breach_majority.csv`, produced from `gold_multi.jsonl`; the benign side is
+labels (`earlier_version/fusion/breach_majority.csv`, produced from `gold_multi.jsonl`; the benign side is
 untouched because refusals are scored by `RefusalScorer`, not the gold judge) changes two
 conclusions the manuscript currently states.
 

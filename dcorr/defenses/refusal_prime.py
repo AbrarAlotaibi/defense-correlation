@@ -11,7 +11,7 @@ what keeps the attack faithful rather than accidentally transferring.
 
 If the released SafeDecoding expert for the target is obtained, set mode: safedecoding
 and rerun stage 04 for this defense only. Which mode was used is recorded on every row
-and is reported in the paper (see PREREGISTRATION.md section 6).
+and is reported in the paper (see earlier_version/PREREGISTRATION.md section 6).
 """
 from __future__ import annotations
 

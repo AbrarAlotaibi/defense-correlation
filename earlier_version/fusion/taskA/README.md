@@ -5,7 +5,7 @@ No new runs, no API calls. Regenerate with:
 ```bash
 python scripts/18_task_a_variance.py --primary results/hpc_vicuna_autodan \
     --nolg results/hpc_vicuna_autodan_nolg --config configs/hpc_vicuna_autodan.yaml \
-    --out fusion/taskA
+    --out earlier_version/fusion/taskA
 ```
 
 Provenance for every file is in `meta.json`: seed 20260727, grader prompt SHA-256, judge model

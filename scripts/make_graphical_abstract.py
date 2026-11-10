@@ -13,7 +13,7 @@ Canvas is 1328 x 531 px at 100 dpi, which is Elsevier's minimum graphical-abstra
 PNG is written at 200 dpi (2656 x 1062 px), inside their preferred range.
 
 Usage:
-  python scripts/make_graphical_abstract.py --out paper/figures
+  python scripts/make_graphical_abstract.py --out earlier_version/paper/figures
 """
 from __future__ import annotations
 
@@ -155,7 +155,7 @@ def build(out: Path) -> None:
 
 def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--out", type=Path, default=Path("paper/figures"))
+    p.add_argument("--out", type=Path, default=Path("earlier_version/paper/figures"))
     build(p.parse_args().out)
 
 

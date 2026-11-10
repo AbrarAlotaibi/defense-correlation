@@ -9,7 +9,7 @@ by [`scripts/09_build_fusion_inputs.py`](../scripts/09_build_fusion_inputs.py).
 
 ```bash
 python scripts/09_build_fusion_inputs.py --run results/hpc_vicuna_autodan \
-    --config configs/hpc_vicuna_autodan.yaml --out fusion/ --verify-frr
+    --config configs/hpc_vicuna_autodan.yaml --out earlier_version/fusion/ --verify-frr
 cd fusion
 python ../scripts/fusion_analysis.py --breach breach.csv --refusal refusal.csv \
     --rows rows.csv --out fusion_results.tex
@@ -168,7 +168,7 @@ adaptive attack is re-optimised against each defense separately. `scripts/input_
 separates the two, from a matrix built by `scripts/10_build_cross_breach.py`:
 
 ```bash
-python scripts/10_build_cross_breach.py --run results/hpc_vicuna_autodan --out fusion/cross_breach.csv
+python scripts/10_build_cross_breach.py --run results/hpc_vicuna_autodan --out earlier_version/fusion/cross_breach.csv
 cd fusion && python ../scripts/input_level_phi.py --cross cross_breach.csv     --published ../results/hpc_vicuna_autodan/table6.csv --out r3_results.tex
 ```
 

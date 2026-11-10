@@ -19,7 +19,7 @@ manuscript uses.
 
 Usage:
   python scripts/20_task_b_grader_variance.py --run results/hpc_vicuna_autodan \
-      --out fusion/taskB
+      --out earlier_version/fusion/taskB
 """
 from __future__ import annotations
 

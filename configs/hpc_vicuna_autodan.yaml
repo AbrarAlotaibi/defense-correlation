@@ -100,7 +100,7 @@ defenses:
     # token_anomaly) is degenerate because ppl_filter blocks 100% of the GCG attack, so its
     # marginal is 0 and phi is undefined. The probe row has a healthy marginal (~0.35), so
     # two probes at different depths give a within-row pair with two live marginals.
-    # See PREREGISTRATION.md amendment 2026-08-12.
+    # See earlier_version/PREREGISTRATION.md amendment 2026-08-12.
     enabled: true
     row: internal_representations
     layer: 8
