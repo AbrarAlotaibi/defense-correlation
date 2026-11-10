@@ -46,9 +46,10 @@ plt.rcParams.update({
     "axes.spines.right": False, "lines.linewidth": 1.4,
 })
 
-SHORT = {"ppl_filter": "likelihood", "token_anomaly": "token-anomaly", "llamaguard": "guard model",
-         "probe": "probe (mid)", "probe_b": "probe (early)", "refusal_prime": "refusal prompt",
-         "smoothllm": "perturbation", "undefended": "undefended"}
+SHORT = {"ppl_filter": "filter", "token_anomaly": "anomaly", "llamaguard": "guard",
+         "probe": r"probe$_{16}$", "probe_b": r"probe$_{8}$", "refusal_prime": "priming",
+         "smoothllm": "aggregator", "undefended": "undefended"}
+# The short names are the ones the manuscript's safeguard table defines.
 
 
 def nm(d: str) -> str:
@@ -57,7 +58,7 @@ def nm(d: str) -> str:
 
 def pair_label(k: str) -> str:
     a, b = k.split("|")
-    return f"{nm(a)} x {nm(b)}"
+    return f"{nm(a)} | {nm(b)}"
 
 
 # Where the manuscript includes figures from. Copying on write, rather than by hand later,
@@ -131,15 +132,16 @@ def fig_null_forest(res: dict, out: Path):
     fig, ax = plt.subplots(figsize=(5.4, 0.3 * len(items) + 1.3))
     null = (res.get("null") or {}).get("mean")
     if null is not None:
-        ax.axvspan(0, null, color=MUTED, alpha=0.10, zorder=1)
+        ax.axvspan(min(lo) - 0.05, null, color=MUTED, alpha=0.10, zorder=1)
         ax.axvline(null, color=MUTED, lw=1.1, ls="--", zorder=2)
-        ax.text(null, -0.9, "  attack reproducibility (null)",
+        ax.text(null, -0.9, r"  $\phi_{\mathrm{null}}$",
                 fontsize=7, color=MUTED, va="center")
     ax.hlines(y, lo, hi, color=BLUE, lw=1.4, zorder=3)
     ax.plot(mid, y, "o", ms=4.5, color=BLUE, mec="white", mew=0.8, zorder=4)
     ax.set_yticks(y, labels)
     ax.set_ylim(-1.4, len(items) - 0.4)
-    ax.set_xlabel(r"$\phi$ between safeguard failures (behavior level)")
+    ax.set_xlabel(r"behavior-level $\phi$")
+    ax.set_xlim(min(lo) - 0.05, max(hi) + 0.05)
     ax.yaxis.grid(False)
     _finish(fig, out, "fig2_null_forest")
 
@@ -155,7 +157,7 @@ def fig_difficulty(res: dict, out: Path):
     fig, ax = plt.subplots(figsize=(3.5, 3.5))
     lim = max(max(obs, default=0), max(pred, default=0), 0.1) * 1.15
     ax.plot([0, lim], [0, lim], color=MUTED, lw=1.0, ls="--", zorder=2)
-    ax.text(lim * 0.97, lim * 0.97, "difficulty explains it all", fontsize=7, color=MUTED,
+    ax.text(lim * 0.97, lim * 0.97, "observed = predicted", fontsize=7, color=MUTED,
             ha="right", va="bottom", rotation=45, rotation_mode="anchor")
     ax.plot(pred, obs, "o", ms=5, color=BLUE, mec="white", mew=0.8, zorder=3)
     ax.set_xlabel(r"$\phi$ predicted by behavior difficulty alone")

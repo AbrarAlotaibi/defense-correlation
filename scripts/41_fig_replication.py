@@ -40,9 +40,9 @@ plt.rcParams.update({
     "axes.spines.right": False,
 })
 
-SHORT = {"ppl_filter": "likelihood", "token_anomaly": "token-anomaly",
-         "llamaguard": "guard model", "probe": "probe (mid)", "probe_b": "probe (early)",
-         "refusal_prime": "refusal prompt", "smoothllm": "perturbation"}
+SHORT = {"ppl_filter": "filter", "token_anomaly": "anomaly",
+         "llamaguard": "guard", "probe": r"probe$_{16}$", "probe_b": r"probe$_{8}$",
+         "refusal_prime": "priming", "smoothllm": "aggregator"}
 ORDER = ["smoothllm", "probe", "probe_b", "ppl_filter", "token_anomaly",
          "refusal_prime", "llamaguard"]
 
@@ -106,7 +106,7 @@ for ax, (data, title, colour, hatch) in zip(
     ax.set_yticks(y, [SHORT.get(d, d) for d in members])
     ax.invert_yaxis()
     ax.set_xlim(0, 1.0)
-    ax.set_xlabel("attack success under the fluent adaptive adversary")
+    ax.set_xlabel("attack success rate")
     ax.set_title(title, color=INK)
 
 out = REPO / "results" / "v2_vicuna" / "figures"
