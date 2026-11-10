@@ -93,7 +93,7 @@ Runs reported in the paper:
 ## Where each reported number comes from
 
 No number in the paper is typed by hand. Each comes from one of these files, and
-`scripts/39_verify_claims.py` recomputes 169 of them and checks them against the manuscript
+`scripts/39_verify_claims.py` recomputes 180 of them and checks them against the manuscript
 text.
 
 | Paper section | File in `results/<run>/` | Produced by |
