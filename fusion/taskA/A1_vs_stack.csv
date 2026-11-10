@@ -1,0 +1,14 @@
+defense,stack,n_defense_only,n_stack_only,p_exact
+perplexity,seven_layer,66,0,2.711e-20
+token-anomaly,seven_layer,35,0,5.821e-11
+llama-guard,seven_layer,1,0,1.0000
+refusal-prime,seven_layer,60,0,1.735e-18
+smoothllm,seven_layer,54,0,1.110e-16
+probe16,seven_layer,68,0,6.776e-21
+probe8,seven_layer,60,0,1.735e-18
+perplexity,six_layer_no_llamaguard,66,0,2.711e-20
+token-anomaly,six_layer_no_llamaguard,35,0,5.821e-11
+refusal-prime,six_layer_no_llamaguard,60,0,1.735e-18
+smoothllm,six_layer_no_llamaguard,54,0,1.110e-16
+probe16,six_layer_no_llamaguard,68,0,6.776e-21
+probe8,six_layer_no_llamaguard,60,0,1.735e-18

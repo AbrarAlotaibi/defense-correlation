@@ -1,0 +1,27 @@
+# D2 (REVIEW item M5): direct attack on the stack WITHOUT Llama Guard.
+#
+# WHY. The intersection-versus-direct check in the primary run compares a predicted 0.010
+# against a measured 0.000. Both sit on the floor, so agreement there carries almost no
+# evidential weight: any method that returns "near zero" would pass. Llama Guard is the
+# cause - its residual ASR of 0.01 dominates the intersection and leaves no resolution.
+#
+# Removing it makes the check informative. Over the remaining six defenses the intersection
+# over the stored per-defense breach vectors predicts a residual of 0.190 (the k=1 row of
+# fusion/manuscript/B1_k_of_n_no_llamaguard.csv), so a direct attack on the assembled
+# six-layer stack has a non-trivial target to agree or disagree with.
+#
+# Everything else is identical to hpc_vicuna_autodan.yaml. The thresholds are NOT
+# recalibrated: results/<run>/calibration.json is copied from the primary run so the six
+# layers sit at exactly the operating points the paper reports.
+extends: hpc_vicuna_autodan.yaml
+
+run_name: hpc_vicuna_autodan_nolg
+
+defenses:
+  llamaguard:
+    enabled: false          # the point of this run
+  promptguard:
+    enabled: false          # already disabled in the primary run; restated for clarity
+
+stack:
+  order: [ppl_filter, token_anomaly, probe, probe_b, refusal_prime, smoothllm]

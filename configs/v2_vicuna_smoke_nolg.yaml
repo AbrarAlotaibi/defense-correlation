@@ -1,0 +1,7 @@
+# Plan item 1.7: the six-layer stack at full attack budget on the first 5 behaviours.
+extends: v2_vicuna_nolg.yaml
+
+run_name: v2_vicuna_smoke_nolg
+
+data:
+  eval_limit: 5

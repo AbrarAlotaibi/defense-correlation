@@ -1,0 +1,9 @@
+{"config": "configs/v2_vicuna_smoke.yaml", "seed": 0, "stage": "03", "seconds": 222.7, "returncode": 0, "finished": "2026-10-12 15:48:52"}
+{"config": "configs/v2_vicuna_smoke.yaml", "seed": 0, "stage": "03", "seconds": 27.5, "returncode": 0, "finished": "2026-10-12 18:08:29"}
+{"config": "configs/v2_vicuna_smoke.yaml", "seed": 0, "stage": "04", "seconds": 3803.3, "returncode": 0, "finished": "2026-10-12 19:11:52"}
+{"config": "configs/v2_vicuna_smoke.yaml", "seed": 0, "stage": "12", "seconds": 34.6, "returncode": 0, "finished": "2026-10-12 19:12:27"}
+{"config": "configs/v2_vicuna_smoke.yaml", "seed": 0, "stage": "05", "seconds": 3059.3, "returncode": 0, "finished": "2026-10-12 20:03:26"}
+{"config": "configs/v2_vicuna_smoke.yaml", "seed": 0, "stage": "24", "seconds": 2865.6, "returncode": 0, "finished": "2026-10-12 20:51:12"}
+{"config": "configs/v2_vicuna_smoke.yaml", "seed": 0, "stage": "B12", "seconds": 36.2, "returncode": 0, "finished": "2026-10-12 20:51:48"}
+{"config": "configs/v2_vicuna_smoke.yaml", "seed": 0, "stage": "B4", "seconds": 197.9, "returncode": 0, "finished": "2026-10-12 20:55:06"}
+{"config": "configs/v2_vicuna_smoke.yaml", "seed": 0, "stage": "B5", "seconds": 97.0, "returncode": 0, "finished": "2026-10-12 20:56:43"}

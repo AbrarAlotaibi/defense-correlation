@@ -1,0 +1,19 @@
+# D (REVIEW item M4, second half): the primary configuration re-run with thresholds set on an
+# EXTERNAL benign corpus instead of in-sample on the 100 evaluation prompts.
+#
+# WHY. Every threshold in the reported runs is calibrated on the same 100 benign prompts later
+# used to report false-refusal rates, and at n=100 a 1% target rate is a single prompt.
+# Recalibrating on 805 AlpacaEval instructions (disjoint from the evaluation set and from the
+# probe's training pool) moves the surface filters slightly and moves probe16 enormously: at
+# its external threshold it would refuse 26% of the held-out benign set rather than 1%.
+#
+# probe16 appears in 5 of the 15 measurable pairs and in the ONLY pair that survives difficulty
+# stratification, so the mechanism-specific reading of H1 currently rests on a threshold that is
+# admittedly an artefact of the calibration corpus. This run tests whether that reading survives.
+#
+# Thresholds are NOT recalibrated here: results/<run>/calibration.json is written from
+# results/hpc_vicuna_autodan/calibration_external.json before the job starts, so stage 04 and
+# stage 05 merge the external values exactly as they merge the in-sample ones.
+extends: hpc_vicuna_autodan.yaml
+
+run_name: hpc_vicuna_autodan_extthr

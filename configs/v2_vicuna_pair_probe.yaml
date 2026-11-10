@@ -1,0 +1,23 @@
+# A short validation of the PAIR arm before committing a full array to it.
+#
+# The one thing that cannot be checked without a GPU is whether the attacker model actually
+# cooperates. Qwen2.5-7B-Instruct is reasonably aligned, and if it refuses the red-teaming
+# instruction the arm produces weak attacks for a reason that has nothing to do with the
+# defenses. That failure is observable -- every record carries pair_parse_failures, and a
+# refusal is not parsable as the JSON contract -- so this config runs 8 behaviours against
+# the undefended arm and nothing else, which is enough to read the counter and look at the
+# prompts the attacker proposed.
+#
+# WRITES INTO ITS OWN RUN DIRECTORY, not results/v2_vicuna: a validation pass with
+# data.eval_limit set must never leave 8-behaviour rows in the files the paper reads.
+extends: v2_vicuna_pair.yaml
+
+run_name: v2_vicuna_pair_probe
+
+data:
+  eval_limit: 8
+
+attack:
+  pair:
+    streams: 2
+    iterations: 3

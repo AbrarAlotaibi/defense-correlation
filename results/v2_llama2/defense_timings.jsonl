@@ -1,0 +1,14 @@
+{"stage": "04", "defense": "ppl_filter", "seed_index": 0, "seconds": 1287.0, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 09:51:25"}
+{"stage": "04", "defense": "token_anomaly", "seed_index": 0, "seconds": 1139.7, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 10:10:25"}
+{"stage": "04", "defense": "llamaguard", "seed_index": 0, "seconds": 1479.8, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 10:35:05", "guard_loads": 16}
+{"stage": "04", "defense": "refusal_prime", "seed_index": 0, "seconds": 1519.1, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 11:00:24"}
+{"stage": "04", "defense": "ppl_filter", "seed_index": 1, "seconds": 1200.7, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 11:30:26"}
+{"stage": "04", "defense": "token_anomaly", "seed_index": 1, "seconds": 1142.4, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 11:49:28"}
+{"stage": "04", "defense": "llamaguard", "seed_index": 1, "seconds": 1642.2, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 12:16:50", "guard_loads": 16}
+{"stage": "04", "defense": "refusal_prime", "seed_index": 1, "seconds": 1610.0, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 12:43:41"}
+{"stage": "04", "defense": "smoothllm", "seed_index": 0, "seconds": 15451.3, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 15:17:55"}
+{"stage": "04", "defense": "probe", "seed_index": 0, "seconds": 1240.4, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 15:38:36"}
+{"stage": "04", "defense": "probe_b", "seed_index": 0, "seconds": 2244.5, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 16:16:00"}
+{"stage": "04", "defense": "smoothllm", "seed_index": 1, "seconds": 15107.6, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 16:55:28"}
+{"stage": "04", "defense": "probe", "seed_index": 1, "seconds": 1319.0, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 17:17:27"}
+{"stage": "04", "defense": "probe_b", "seed_index": 1, "seconds": 2144.5, "n_behaviours": 100, "resumed": false, "finished": "2026-10-14 17:53:12"}

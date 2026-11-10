@@ -1,0 +1,10 @@
+Cochran's Q across 7 defenses on 100 behaviours
+  Q  = 193.4070
+  df = 6
+  p  = 4.798e-39
+
+Follow-up: exact-binomial McNemar on all 21 pairs, Holm-corrected (family size 21).
+  significant at 0.05 uncorrected : 14/21
+  significant at 0.05 after Holm  : 11/21
+
+Llama Guard dominance (no behaviour where Llama Guard breaches and the other member holds): True

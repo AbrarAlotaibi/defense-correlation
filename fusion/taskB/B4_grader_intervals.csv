@@ -1,0 +1,16 @@
+pair,phi_majority,phi_grader_lo,phi_grader_hi,Delta_majority,Delta_grader_lo,Delta_grader_hi
+perplexity x token-anomaly,0.357,0.274,0.436,0.079,0.059,0.096
+perplexity x refusal-prime,0.639,0.477,0.679,0.141,0.108,0.152
+perplexity x smoothllm,0.515,0.415,0.605,0.119,0.096,0.141
+perplexity x probe16,0.736,0.544,0.743,0.165,0.122,0.167
+perplexity x probe8,0.658,0.513,0.723,0.144,0.115,0.164
+token-anomaly x refusal-prime,0.337,0.291,0.438,0.076,0.065,0.099
+token-anomaly x smoothllm,0.381,0.298,0.448,0.090,0.069,0.105
+token-anomaly x probe16,0.406,0.288,0.445,0.092,0.065,0.100
+token-anomaly x probe8,0.369,0.284,0.441,0.082,0.062,0.102
+refusal-prime x smoothllm,0.682,0.496,0.701,0.160,0.117,0.166
+refusal-prime x probe16,0.605,0.473,0.670,0.138,0.109,0.151
+refusal-prime x probe8,0.574,0.479,0.670,0.128,0.110,0.154
+smoothllm x probe16,0.510,0.377,0.590,0.122,0.090,0.141
+smoothllm x probe8,0.492,0.382,0.578,0.115,0.091,0.137
+probe16 x probe8,0.759,0.605,0.805,0.171,0.138,0.186

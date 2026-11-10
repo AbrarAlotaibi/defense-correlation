@@ -1,0 +1,10 @@
+{
+  "model_id": "meta-llama/Llama-2-7b-chat-hf",
+  "layer": 16,
+  "n_train": 520,
+  "n_val": 130,
+  "val_auroc": 1.0,
+  "val_acc": 0.9923076923076923,
+  "weights_path": "C:\\Users\\Abrar\\Code_Projects\\defense-correlation\\data\\probe_llama2.pt",
+  "dedup_reasserted": true
+}

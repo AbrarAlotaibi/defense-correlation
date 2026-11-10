@@ -1,0 +1,16 @@
+pair,phi,p_perm
+perplexity x token-anomaly,0.350,7.999e-04
+perplexity x refusal-prime,0.577,9.999e-05
+perplexity x smoothllm,0.566,9.999e-05
+perplexity x probe16,0.594,9.999e-05
+perplexity x probe8,0.621,9.999e-05
+token-anomaly x refusal-prime,0.300,0.0055
+token-anomaly x smoothllm,0.341,7.999e-04
+token-anomaly x probe16,0.324,0.0016
+token-anomaly x probe8,0.385,3.000e-04
+refusal-prime x smoothllm,0.557,9.999e-05
+refusal-prime x probe16,0.446,2.000e-04
+refusal-prime x probe8,0.458,9.999e-05
+smoothllm x probe16,0.485,9.999e-05
+smoothllm x probe8,0.475,9.999e-05
+probe16 x probe8,0.753,9.999e-05

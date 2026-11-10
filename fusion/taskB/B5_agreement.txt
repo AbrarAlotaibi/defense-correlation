@@ -1,0 +1,7 @@
+n_responses          1887
+pct_unanimous        90.46
+pct_split            9.54
+pct_3_2              4.24
+
+judgments per response: [5]
+Blocked responses are excluded: they are never sent to the grader, so they carry no grader variance.

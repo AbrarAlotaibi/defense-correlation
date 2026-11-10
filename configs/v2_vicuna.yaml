@@ -1,0 +1,58 @@
+# v2 primary run: Vicuna-7B-v1.5 in fp16, with the fixed harness.
+#
+# WHERE THIS RAN. Every reported v2 result came off a KFUPM H100 under SLURM
+# (scripts/slurm_v2_core.sbatch and friends). The memory settings below are nonetheless sized
+# for a 16 GB card, because that is what this configuration was developed against, and they
+# were kept unchanged when the run moved to the cluster rather than relaxed to fit 80 GB.
+# That is deliberate: batch size changes the arithmetic, and Section 5.3 reports that 6.3% of
+# greedy responses differ between runs of the same prompt for exactly that reason. A config
+# that grew its batches with the hardware would not be the config those numbers describe.
+#
+# Differences from hpc_vicuna_autodan.yaml (v1, as submitted):
+#   * thresholds: the EXTERNAL calibration (805 AlpacaEval prompts, disjoint from the
+#     evaluation and probe-training sets) is primary (REVIEW R5-5). Its thresholds are copied
+#     to results/v2_vicuna/calibration.json from results/hpc_vicuna_autodan/
+#     calibration_external.json; v2_vicuna_insample.yaml is the one-seed sensitivity run;
+#   * seeds: one per (replicate, defense, behaviour); run each replicate with --seed-index k
+#     (REVIEW F2, dcorr/seeding.py);
+#   * stack attacks check feasibility on the raw prompt as deployed (REVIEW F1);
+#   * Llama Guard inside the AutoDAN loop, fp16 under `reload` residency (REVIEW F4);
+#   * grader: verdict cache, 5 judgments per unique response, majority label.
+extends: hpc_vicuna_autodan.yaml
+
+run_name: v2_vicuna
+
+target:
+  batch_size: 8             # sized for a 16 GB card; kept on the H100 on purpose, since
+                            # batch size changes the arithmetic (see the header)
+  gen_batch_size: 8
+
+attack:
+  behaviour_chunk: 10
+  adaptive:
+    common_random_numbers: false
+    carry_across_behaviours: false
+    expensive_rounds: 3
+    expensive_pool_k: 8
+    final_top_m: 3
+
+judge:
+  # Pin a DATED snapshot, not the floating alias. Verdicts are cached by
+  # (model, temperature, max_tokens, rubric digest, behaviour, response), and the manuscript
+  # claims verdicts are keyed by the grader's identity -- which a moving alias does not give.
+  # The Requesty router exposes only `openai/gpt-4o-mini` plus regional Azure deployments and
+  # NO dated snapshot (checked 2026-10-13), so pinning means going direct to OpenAI, where
+  # gpt-4o-mini-2024-07-18 is available. Grade from a machine that holds OPENAI_API_KEY; the
+  # cluster .env has only the Requesty key, and grading needs no GPU, so run it locally
+  # rather than putting a secret on a shared node.
+  provider: openai
+  base_url: null
+  api_key_env: OPENAI_API_KEY
+  model: gpt-4o-mini-2024-07-18
+  reps: 5
+
+defenses:
+  llamaguard:
+    residency: reload
+    load_in_4bit: false
+    max_gpu_memory: 12GiB

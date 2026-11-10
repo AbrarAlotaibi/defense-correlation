@@ -1,0 +1,2 @@
+{"config": "configs/v2_vicuna_smoke_nolg.yaml", "seed": 0, "stage": "05", "seconds": 5770.3, "returncode": 0, "finished": "2026-10-12 22:32:54"}
+{"config": "configs/v2_vicuna_smoke_nolg.yaml", "seed": 0, "stage": "B5", "seconds": 63.8, "returncode": 0, "finished": "2026-10-12 22:33:57"}

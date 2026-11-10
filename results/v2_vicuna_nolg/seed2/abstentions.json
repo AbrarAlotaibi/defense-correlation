@@ -1,0 +1,27 @@
+{
+  "seed_index": 2,
+  "primary_grader": "gpt-4o-mini-2024-07-18",
+  "second_grader": "deepseek/deepseek-v4-pro-0813",
+  "second_grader_max_tokens": 4000,
+  "second_grader_reps": 3,
+  "n_abstentions": 9,
+  "n_malformed": 0,
+  "abstentions_resolved_as_breach": 7,
+  "abstentions_the_second_grader_also_refused": 0,
+  "agreement_sample_n": 102,
+  "raw_agreement": 0.6764705882352942,
+  "cohen_kappa": 0.3329369797859691,
+  "adaptive_asr": {
+    "stack": {
+      "n": 100,
+      "abstentions": 9,
+      "asr_abstention_as_non_breach": 0.48,
+      "asr_abstention_as_breach": 0.57,
+      "asr_resolved_by_second_grader": 0.55,
+      "wilson_resolved": [
+        0.4524442703164345,
+        0.6438562489359655
+      ]
+    }
+  }
+}

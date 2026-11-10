@@ -1,0 +1,98 @@
+% =====================================================================================
+% Insert addressing the estimand objection (REVIEW.md R3): Eq. (9) is written over inputs,
+% the measurement is indexed by behaviour.
+%
+% ALL NUMBERS ARE MEASURED. No placeholders.
+%   Source : results/hpc_vicuna_autodan/gold.jsonl -> fusion/cross_breach.csv
+%   Script : scripts/input_level_phi.py, input built by scripts/10_build_cross_breach.py
+%   Data   : fusion/r3_estimand_comparison.csv, fusion/run_r3.log
+%
+% Place immediately after the \paragraph{Setup.} block of \S\ref{sec:corr-measure}, or as
+% the first subsection after it. The closing paragraph is written for \S\ref{sec:limits-corr}.
+% =====================================================================================
+
+\subsection{Which estimand does \texorpdfstring{$\phi$}{phi} measure?}
+\label{sec:estimand}
+
+Eq.~\eqref{eq:joint} is written over inputs: $b_l(i)$ is the event that layer $l$ is breached
+on input $i$, and the joint residual is derived with both layers facing the same input. Our
+measurement is indexed by \emph{behaviour} rather than by input, because the adaptive attack
+is re-optimised against each defense separately. For a pair $(d_1,d_2)$, $d_1$'s entry comes
+from a prompt optimised against $d_1$ and $d_2$'s from a different prompt optimised against
+$d_2$. These are two distinct quantities and the distinction should be made explicitly rather
+than left to the reader:
+
+\begin{itemize}
+\item $\phi_{\mathrm{beh}}$ scores each defense on prompts optimised against itself. This is
+what a deployer faces when the adversary is free to retarget after observing which layer
+blocked, and it is the quantity reported in Table~\ref{tab:dependency}.
+\item $\phi_{\mathrm{inp}}$ scores both defenses on the \emph{same} prompt. This is the
+quantity Eq.~\eqref{eq:joint} is written over.
+\end{itemize}
+
+They coincide only if the attack transfers perfectly between defenses, which is precisely
+what \S\ref{par:attack-class} shows to be false. We therefore measure the difference rather
+than assume it away.
+
+\paragraph{A shared-input estimate from data already collected.}
+The two static baselines are shared-input by construction: the plain behaviour prompt is
+byte-identical across defenses, and the transfer suffix is a single fixed string appended to
+every prompt, so neither consults the defense. Computing $\phi$ within each of those prompt
+sets gives $\phi_{\mathrm{inp}}$ directly, with no new attack search and no new generations.
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+Pair & $\phi_{\mathrm{beh}}$ & $\phi_{\mathrm{inp}}$ (plain) & $\phi_{\mathrm{inp}}$ (transfer) \\
+\midrule
+probe$_{16}$ $\times$ probe$_{8}$   & 0.75 & 0.86 & 0.90 \\
+perplexity $\times$ probe$_{8}$     & 0.62 & 0.92 & --   \\
+perplexity $\times$ probe$_{16}$    & 0.59 & 0.93 & --   \\
+perplexity $\times$ refusal-prime   & 0.58 & 0.64 & --   \\
+refusal-prime $\times$ SmoothLLM    & 0.56 & 0.20 & 0.58 \\
+probe$_{8}$ $\times$ SmoothLLM      & 0.48 & 0.29 & 0.33 \\
+probe$_{16}$ $\times$ token-anomaly & 0.32 & 0.93 & 0.85 \\
+perplexity $\times$ token-anomaly   & 0.35 & 1.00 & --   \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent
+Across all fifteen pairs measurable on the plain set, $\phi_{\mathrm{inp}}$ has the
+\emph{same sign} as $\phi_{\mathrm{beh}}$ in $15/15$ cases and is positive in $15/15$, with a
+mean shift of $+0.14$. On the transfer set, where ten pairs are measurable, the agreement is
+$10/10$ on sign, $10/10$ positive, mean shift $+0.10$, and every one of the ten bootstrap
+intervals excludes zero. The conclusion of \S\ref{sec:corr-measure} therefore holds under
+both estimands, and the behaviour-level figure we report is if anything the
+\emph{conservative} one: measured on a common input, these defenses fail together more
+tightly, not less.
+
+That the input-level correlation is the larger of the two is what one should expect. Holding
+the prompt fixed removes the only source of variation that could decorrelate the two layers,
+namely the adversary's freedom to construct a different input for each. Allowing that freedom
+is what makes $\phi_{\mathrm{beh}}$ the operationally relevant quantity for a deployer, and
+it is why we report it as the headline.
+
+\paragraph{What this estimate does not settle.}
+The static baselines are weak attacks, with marginals between $0.03$ and $0.28$ against
+between $0.35$ and $0.68$ for the fluent adversary. Several plain-set pairs therefore rest on
+six to eight breach events: five of the fifteen have bootstrap intervals spanning zero, all
+of them involving SmoothLLM, and the perplexity $\times$ token-anomaly value of $1.00$ means
+only that the same seven behaviours breached both filters. These are brackets, not
+replacements. The definitive version is a cross-evaluation matrix in which the prompts
+optimised against each defense are scored against all the others; that is a scoring pass over
+prompts that already exist rather than a new attack search, and we identify it as the single
+most valuable extension of this experiment alongside the larger behaviour set of
+\S\ref{sec:confound}.
+
+% =====================================================================================
+% APPEND TO \S\ref{sec:limits-corr} (Limitations)
+% =====================================================================================
+
+\textbf{Estimand.} The reported $\phi$ is behaviour-level: each defense is scored on prompts
+optimised against itself, which matches a retargeting adversary but not the same-input
+quantity Eq.~\eqref{eq:joint} is written over. \S\ref{sec:estimand} bounds the difference
+using the two shared-input baselines and finds agreement in sign on all measurable pairs,
+with the input-level estimate the larger of the two, but those baselines are weak attacks and
+several of their pairs are underpowered. A full cross-evaluation under the fluent adversary
+remains outstanding.

@@ -1,0 +1,30 @@
+{
+  "dataset": "bench-llm/or-bench",
+  "file": "or-bench-hard-1k.csv",
+  "license": "CC-BY-4.0",
+  "n_raw": 1319,
+  "n_unique": 1319,
+  "n_clean": 1319,
+  "n_dropped_contaminated": 0,
+  "n_sampled": 400,
+  "sample_seed": 20261011,
+  "jaccard_threshold": 0.6,
+  "deduped_against": [
+    "data/eval_benign.jsonl",
+    "data/eval_harmful.jsonl",
+    "data/probe_train.jsonl (benign half = XSTest)",
+    "data/external_benign_alpacaeval.jsonl (v2 calibration)"
+  ],
+  "categories": [
+    "deception",
+    "harassment",
+    "harmful",
+    "hate",
+    "illegal",
+    "privacy",
+    "self-harm",
+    "sexual",
+    "unethical",
+    "violence"
+  ]
+}

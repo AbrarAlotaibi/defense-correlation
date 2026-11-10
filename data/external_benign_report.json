@@ -1,0 +1,14 @@
+{
+  "corpus": "alpaca_eval",
+  "n_raw": 805,
+  "n_unique": 805,
+  "n_kept": 805,
+  "n_dropped_contaminated": 0,
+  "jaccard_threshold": 0.6,
+  "max_jaccard_kept": 0.5,
+  "deduped_against": [
+    "data/eval_benign.jsonl",
+    "data/probe_train.jsonl"
+  ],
+  "why": "XSTest is the benign half of probe_train.jsonl, so calibrating the probe on it would be leakage; jbb_benign is the in-sample set M4 objects to."
+}

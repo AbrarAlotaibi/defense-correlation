@@ -1,0 +1,7 @@
+size,members,ASR,FRR
+1,token_anomaly,0.35,0.09
+2,"token_anomaly, smoothllm",0.27,0.27
+3,"token_anomaly, smoothllm, probe_b",0.23,0.28
+4,"token_anomaly, smoothllm, probe_b, refusal_prime",0.2,0.45
+5,"token_anomaly, smoothllm, probe_b, refusal_prime, probe",0.19,0.45
+6,"token_anomaly, smoothllm, probe_b, refusal_prime, probe, ppl_filter",0.19,0.45

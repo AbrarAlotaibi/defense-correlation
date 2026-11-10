@@ -1,0 +1,52 @@
+# The second attack family on the primary target: PAIR-style refinement by an attacker LLM.
+#
+# WHY A SEPARATE CONFIG BUT THE SAME run_name. The pair arm must land in the SAME
+# results/v2_vicuna/seed<k>/stage04_<member>.jsonl files as the genetic and static arms, keyed
+# by its own `attack` value, so that every estimand can be recomputed per family with no new
+# plumbing and the two families are read against the same calibration, the same seeds and the
+# same behaviour list. Stage 04 resumes by (model, defense, behaviour, attack), so running it
+# with this config appends only the pending `pair` rows and re-runs nothing.
+#
+# Everything the comparison depends on is therefore inherited rather than restated: thresholds,
+# seeds, behaviours, the grader, the target. The only difference between the two arms is the
+# proposal mechanism, which is the point.
+extends: v2_vicuna.yaml
+
+run_name: v2_vicuna              # deliberate: same run directory, same files
+
+attack:
+  pair:
+    enabled: true
+
+    # THE ATTACKER. Must not be the target: an attacker reading its own refusals is a
+    # different and easier problem, and stage 04 refuses the case outright.
+    #
+    # Qwen2.5-7B-Instruct, chosen from what is cached on the cluster and loadable by plain
+    # transformers. The canonical PAIR attacker is Mistral-7B-Instruct, whose weak refusal
+    # training makes it willing to write jailbreak prompts, but the only local copy is a
+    # w4a16 checkpoint and this environment has no compressed-tensors; deepseek-llm-7b-chat
+    # is quantised the same way. Of the two full-precision candidates (this and
+    # Llama-3.1-8B-Instruct) this one follows a JSON output contract more reliably, which
+    # matters because an unparsable reply wastes an iteration.
+    #
+    # The risk is that it refuses the red-teaming instruction. That is measured, not assumed:
+    # every record carries pair_parse_failures, and a refusing attacker shows up as a high
+    # count rather than as quietly weak attacks. Check it on the first behaviours of the first
+    # run and switch attacker_model_id if it is large.
+    attacker_model_id: /project/g202203240/models/Qwen2.5-7B-Instruct
+    attacker_dtype: bfloat16        # the checkpoint's own dtype
+    attacker_gen_batch_size: 1      # one stream at a time; streams differ in their history
+
+    # BUDGET. The published method uses 30 streams by 3 iterations. This is 4 by 6, which is
+    # 24 candidate evaluations per behaviour against the genetic arm's 30 generations by 24
+    # population. The two are not matched on hyperparameters and cannot be: a genetic arm
+    # evaluates a population per generation. They are compared on `n_evals`, which every
+    # record carries, and the pair arm is the cheaper of the two by that measure, so it is
+    # the conservative side of any claim that the families agree.
+    streams: 4
+    iterations: 6
+
+    temperature: 1.0                # the attacker is the one sampled component; see pair.py
+    top_p: 0.9
+    attacker_max_new_tokens: 512
+    history_turns: 2                # prior turns shown back to the attacker

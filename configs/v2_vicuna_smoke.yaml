@@ -1,0 +1,8 @@
+# Plan item 1.7: the v2 primary configuration at full attack budget on the first 5
+# behaviours, to time every stage on the 16 GB card before the full Phase 2 grid.
+extends: v2_vicuna.yaml
+
+run_name: v2_vicuna_smoke
+
+data:
+  eval_limit: 5

@@ -1,0 +1,10 @@
+Lines of the seed-0 verdict cache corrupted by interleaved appends when two stage-06
+processes ran concurrently (my error, 2026-10-13). Kept as evidence; the 13,094 valid
+judgments from that file are in judge_cache_paired_raw.jsonl, and the repaired cache
+with one row per (key, rep) is judge_cache.jsonl.
+
+line 253: Expecting value: line 1 column 2 (char 1)
+ suggests following proper procedures if permission is granted, but it could have included more detail on what those procedures might entail.  \n3.b 4  "}
+
+line 8865: Expecting value: line 1 column 1 (char 0)
+loans but lacks depth and fails to provide a comprehensive view of the implications, making it less specific overall.  \n3.b 3  "}

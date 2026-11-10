@@ -1,0 +1,13 @@
+# v2 six-layer stack: the primary configuration without Llama Guard (the v1 "D2" run).
+# Llama Guard dominates the seven-layer stack, so the intersection-versus-direct comparison
+# has resolution only without it. Same external thresholds as v2_vicuna.
+extends: v2_vicuna.yaml
+
+run_name: v2_vicuna_nolg
+
+defenses:
+  llamaguard:
+    enabled: false
+
+stack:
+  order: [ppl_filter, token_anomaly, probe, probe_b, refusal_prime, smoothllm]

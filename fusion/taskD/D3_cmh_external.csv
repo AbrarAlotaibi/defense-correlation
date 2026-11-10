@@ -1,0 +1,16 @@
+pair,crude_OR,CMH_OR,p,q
+perplexity x probe8,122.968,65.212,1.487e-07,2.230e-06
+token-anomaly x smoothllm,16.520,36.905,0.0099,0.0745
+refusal-prime x probe16,26.714,6.660,0.0180,0.0901
+perplexity x token-anomaly,52.881,10.308,0.0310,0.1164
+token-anomaly x probe16,33.931,18.177,0.1606,0.4819
+token-anomaly x probe8,30.176,3.813,0.3382,0.8455
+token-anomaly x refusal-prime,19.241,6.156,0.4034,0.8645
+smoothllm x probe16,11.523,2.278,0.5441,0.9038
+perplexity x refusal-prime,16.429,0.965,0.5743,0.9038
+perplexity x probe16,24.401,1.305,0.6239,0.9038
+refusal-prime x probe8,14.444,1.201,0.6628,0.9038
+smoothllm x probe8,8.215,1.242,0.7939,0.9590
+probe16 x probe8,16.212,0.000,0.8311,0.9590
+refusal-prime x smoothllm,7.286,1.334,0.9597,0.9628
+perplexity x smoothllm,9.364,0.484,0.9628,0.9628

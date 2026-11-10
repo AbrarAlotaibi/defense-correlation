@@ -1,0 +1,16 @@
+d1,d2,crude_OR_haldane,crude_OR,CMH_OR,p,q,n_strata,min_stratum
+ppl_filter,probe,16.0588,17.4,2.8291,0.2468,0.5619,5,6
+ppl_filter,probe_b,19.1169,21.0,3.0717,0.2093,0.5619,5,10
+ppl_filter,refusal_prime,14.5309,15.7253,3.9473,0.0628,0.3139,5,10
+ppl_filter,smoothllm,15.1714,16.7176,3.3704,0.1599,0.5619,5,10
+ppl_filter,token_anomaly,6.0141,6.6429,1.3926,0.9072,0.9435,5,8
+probe,probe_b,67.9714,87.0,158.719,0.0,0.0,5,10
+probe,refusal_prime,7.2797,7.6667,0.718,0.9435,0.9435,5,7
+probe,smoothllm,9.6454,10.4,1.256,0.9388,0.9435,5,8
+probe,token_anomaly,5.32,5.8649,1.0444,0.7661,0.9435,5,8
+probe_b,refusal_prime,7.1674,7.5089,0.8752,0.8705,0.9435,5,9
+probe_b,smoothllm,7.8341,8.25,0.9148,0.8353,0.9435,5,7
+probe_b,token_anomaly,6.4545,7.0,2.61,0.2622,0.5619,5,8
+refusal_prime,smoothllm,12.2617,13.1429,4.3421,0.0231,0.173,5,10
+refusal_prime,token_anomaly,3.9169,4.125,1.3451,0.7892,0.9435,5,6
+smoothllm,token_anomaly,4.5294,4.75,1.7857,0.3954,0.7413,5,5

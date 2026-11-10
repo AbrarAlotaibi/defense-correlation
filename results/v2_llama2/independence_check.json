@@ -1,0 +1,865 @@
+{
+  "run": "D:\\Code_Projects\\defense-correlation\\results\\v2_llama2",
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "defenses": [
+    "llamaguard",
+    "ppl_filter",
+    "probe",
+    "probe_b",
+    "refusal_prime",
+    "smoothllm",
+    "token_anomaly",
+    "undefended"
+  ],
+  "across_replicates": {
+    "llamaguard:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "llamaguard:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "llamaguard:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "ppl_filter:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "ppl_filter:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "ppl_filter:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "probe:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "probe:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "probe:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "probe_b:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "probe_b:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 2,
+      "same_prompt_frac": 0.02,
+      "same_search_seed": 0
+    },
+    "probe_b:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "refusal_prime:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "refusal_prime:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "refusal_prime:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "smoothllm:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "smoothllm:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "smoothllm:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "token_anomaly:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "token_anomaly:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "token_anomaly:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "undefended:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "undefended:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "undefended:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    }
+  },
+  "across_defenses": {
+    "seed0:llamaguard-ppl_filter": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed0:llamaguard-probe": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed0:llamaguard-probe_b": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:llamaguard-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:llamaguard-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:llamaguard-token_anomaly": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed0:llamaguard-undefended": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed0:ppl_filter-probe": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed0:ppl_filter-probe_b": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:ppl_filter-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:ppl_filter-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:ppl_filter-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:ppl_filter-undefended": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed0:probe-probe_b": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:probe-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:probe-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:probe-token_anomaly": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed0:probe-undefended": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed0:probe_b-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:probe_b-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:probe_b-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:probe_b-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:refusal_prime-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:refusal_prime-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:refusal_prime-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:smoothllm-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:smoothllm-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed0:token_anomaly-undefended": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed1:llamaguard-ppl_filter": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:llamaguard-probe": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed1:llamaguard-probe_b": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:llamaguard-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:llamaguard-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:llamaguard-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:llamaguard-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:ppl_filter-probe": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:ppl_filter-probe_b": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:ppl_filter-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:ppl_filter-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:ppl_filter-token_anomaly": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed1:ppl_filter-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:probe-probe_b": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:probe-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:probe-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:probe-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:probe-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:probe_b-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:probe_b-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:probe_b-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:probe_b-undefended": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    },
+    "seed1:refusal_prime-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:refusal_prime-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:refusal_prime-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:smoothllm-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:smoothllm-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed1:token_anomaly-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:llamaguard-ppl_filter": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:llamaguard-probe": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:llamaguard-probe_b": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:llamaguard-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:llamaguard-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:llamaguard-token_anomaly": {
+      "n": 100,
+      "same_prompt": 2,
+      "same_prompt_frac": 0.02,
+      "same_search_seed": 0
+    },
+    "seed2:llamaguard-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:ppl_filter-probe": {
+      "n": 100,
+      "same_prompt": 3,
+      "same_prompt_frac": 0.03,
+      "same_search_seed": 0
+    },
+    "seed2:ppl_filter-probe_b": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:ppl_filter-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:ppl_filter-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:ppl_filter-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:ppl_filter-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:probe-probe_b": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:probe-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:probe-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:probe-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:probe-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:probe_b-refusal_prime": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:probe_b-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:probe_b-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:probe_b-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:refusal_prime-smoothllm": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:refusal_prime-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:refusal_prime-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:smoothllm-token_anomaly": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:smoothllm-undefended": {
+      "n": 100,
+      "same_prompt": 0,
+      "same_prompt_frac": 0.0,
+      "same_search_seed": 0
+    },
+    "seed2:token_anomaly-undefended": {
+      "n": 100,
+      "same_prompt": 1,
+      "same_prompt_frac": 0.01,
+      "same_search_seed": 0
+    }
+  },
+  "static_baselines": {
+    "llamaguard:static_plain:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "llamaguard:static_gcg:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "llamaguard:static_plain:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "llamaguard:static_gcg:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "llamaguard:static_plain:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "llamaguard:static_gcg:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "ppl_filter:static_plain:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "ppl_filter:static_gcg:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "ppl_filter:static_plain:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "ppl_filter:static_gcg:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "ppl_filter:static_plain:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "ppl_filter:static_gcg:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe:static_plain:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe:static_gcg:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe:static_plain:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe:static_gcg:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe:static_plain:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe:static_gcg:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe_b:static_plain:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe_b:static_gcg:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe_b:static_plain:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe_b:static_gcg:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe_b:static_plain:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "probe_b:static_gcg:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "refusal_prime:static_plain:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "refusal_prime:static_gcg:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "refusal_prime:static_plain:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "refusal_prime:static_gcg:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "refusal_prime:static_plain:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "refusal_prime:static_gcg:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "smoothllm:static_plain:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "smoothllm:static_gcg:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "smoothllm:static_plain:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "smoothllm:static_gcg:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "smoothllm:static_plain:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "smoothllm:static_gcg:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "token_anomaly:static_plain:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "token_anomaly:static_gcg:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "token_anomaly:static_plain:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "token_anomaly:static_gcg:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "token_anomaly:static_plain:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "token_anomaly:static_gcg:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "undefended:static_plain:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "undefended:static_gcg:seed0-seed1": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "undefended:static_plain:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "undefended:static_gcg:seed0-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "undefended:static_plain:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    },
+    "undefended:static_gcg:seed1-seed2": {
+      "n": 100,
+      "same_prompt": 100
+    }
+  },
+  "problems": []
+}

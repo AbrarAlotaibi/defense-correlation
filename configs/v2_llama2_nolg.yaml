@@ -1,0 +1,20 @@
+# The six-layer stack on the replication target: Llama-2-7b-chat without Llama Guard.
+#
+# Same reasoning as v2_vicuna_nolg. The guard admits 1% of attacked prompts on this target,
+# even more dominant than on the primary one, so the seven-layer residual sits on the floor and
+# the intersection-versus-measured comparison that Section 5.6 is about has no resolution with
+# it present. Without it there are six members whose residual can move.
+#
+# Thresholds come from results/v2_llama2/calibration.json, which v2_llama2.yaml already points
+# at, so this run uses the same operating points as the seven-layer one and the difference
+# between them is the guard alone.
+extends: v2_llama2.yaml
+
+run_name: v2_llama2_nolg
+
+defenses:
+  llamaguard:
+    enabled: false
+
+stack:
+  order: [ppl_filter, token_anomaly, probe, probe_b, refusal_prime, smoothllm]

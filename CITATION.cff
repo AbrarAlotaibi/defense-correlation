@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+title: "How Diverse Are Layered Safeguards? Code and data"
+message: "If you use this code or the measurements it contains, please cite the accompanying paper."
+type: software
+authors:
+  - family-names: Alotaibi
+    given-names: Abrar
+  - family-names: Ahmed
+    given-names: Moataz
+keywords:
+  - LLM safety
+  - jailbreak
+  - safeguards
+  - ensemble diversity
+  - evaluation
+license: MIT
+repository-code: "https://github.com/AbrarAlotaibi/defense-correlation"
+preferred-citation:
+  type: unpublished
+  title: "How Diverse Are Layered Safeguards? Estimands and Measurement for Ensembles of LLM Jailbreak Defenses"
+  authors:
+    - family-names: Alotaibi
+      given-names: Abrar
+    - family-names: Ahmed
+      given-names: Moataz
+  year: 2026
+  notes: "Manuscript submitted for publication"
