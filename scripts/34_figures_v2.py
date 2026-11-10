@@ -65,8 +65,11 @@ def pair_label(k: str) -> str:
 # a stale PDF under the right filename, and nothing downstream can catch that.
 MANUSCRIPT_FIGURES = Path(os.environ.get(
     "DCORR_MANUSCRIPT_FIGURES",
-    Path(__file__).resolve().parents[1].parent / "defense-correlation-paper" / "paper_A" / "figures",
+    Path(__file__).resolve().parents[1].parent / "defense-correlation-paper" / "paper_A_mlj",
 ))
+# The journal build numbers its figure files in order of appearance. A figure that is not
+# listed here is written to the results folder only.
+MANUSCRIPT_NAMES = {"fig2_null_forest": "Fig1", "fig3_difficulty": "Fig2", "fig5_refusal": "Fig3"}
 
 
 def _finish(fig, out: Path, name: str):
@@ -74,11 +77,14 @@ def _finish(fig, out: Path, name: str):
     for ext in ("pdf", "png"):
         fig.savefig(out / f"{name}.{ext}")
     plt.close(fig)
-    if MANUSCRIPT_FIGURES.is_dir():
-        shutil.copy2(out / f"{name}.pdf", MANUSCRIPT_FIGURES / f"{name}.pdf")
-        print(f"  wrote {name}.pdf / .png, copied the pdf to the manuscript")
+    target = MANUSCRIPT_NAMES.get(name)
+    if target is None:
+        print(f"  wrote {name}.pdf / .png  (not used in the manuscript)")
+    elif MANUSCRIPT_FIGURES.is_dir():
+        shutil.copy2(out / f"{name}.pdf", MANUSCRIPT_FIGURES / f"{target}.pdf")
+        print(f"  wrote {name}.pdf / .png, copied the pdf to the manuscript as {target}.pdf")
     else:
-        print(f"  wrote {name}.pdf / .png  (manuscript dir absent, copy by hand)")
+        print(f"  wrote {name}.pdf / .png  (manuscript dir absent, copy by hand as {target}.pdf)")
 
 
 # --------------------------------------------------------------------------- figures
@@ -182,7 +188,11 @@ def fig_estimands(res: dict, out: Path):
 
 
 def fig_refusal(res: dict, out: Path):
-    """False refusal per safeguard on each benign set, with Wilson intervals."""
+    """False refusal per member on each benign set, with Wilson intervals.
+
+    Only the seven members are drawn. The undefended target and the stacks are in the
+    stored results too, and are reported in the manuscript's table, not here.
+    """
     frr = res.get("frr") or {}
     if not frr:
         return
@@ -190,19 +200,21 @@ def fig_refusal(res: dict, out: Path):
     sets = [s for s in ("jbb", "orbench") if s in first]
     if not sets:
         return
-    defs = sorted(first[sets[0]], key=lambda d: -first[sets[0]][d]["frr"])
+    members = [d for d in first[sets[0]] if d != "undefended" and not d.startswith("stack")]
+    defs = sorted(members, key=lambda d: -first[sets[0]][d]["frr"])
     y = np.arange(len(defs))
     fig, ax = plt.subplots(figsize=(5.0, 0.42 * len(defs) + 1.1))
     for i, (s, colour, marker) in enumerate(zip(sets, (BLUE, AQUA), ("o", "^"))):
         v = [first[s].get(d, {}).get("frr", math.nan) for d in defs]
         ci = [first[s].get(d, {}).get("ci", (math.nan, math.nan)) for d in defs]
-        off = 0.16 if i == 0 else -0.16
+        off = -0.16 if i == 0 else 0.16
         ax.hlines(y + off, [c[0] for c in ci], [c[1] for c in ci], color=colour, lw=1.3, zorder=3)
         ax.plot(v, y + off, marker, ms=4.5, color=colour, mec="white", mew=0.8, zorder=4,
-                label={"jbb": "benchmark benign", "orbench": "held-out over-refusal"}[s])
+                label={"jbb": "matched benign (n = 100)", "orbench": "OR-Bench (n = 400)"}[s])
     ax.set_yticks(y, [nm(d) for d in defs])
     ax.set_xlabel("false refusal rate")
     ax.set_xlim(0, 1.0)
+    ax.invert_yaxis()  # highest rate at the top, the order of the manuscript's table
     ax.yaxis.grid(False)
     ax.legend(loc="lower left", bbox_to_anchor=(0, 1.0, 1, 0.1), ncol=len(sets),
               mode="expand", borderaxespad=0)

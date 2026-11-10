@@ -120,11 +120,12 @@ plt.close(fig)
 # nothing downstream can detect: the build succeeds and the figure is simply wrong.
 MS = Path(os.environ.get(
     "DCORR_MANUSCRIPT_FIGURES",
-    Path(__file__).resolve().parents[1].parent / "defense-correlation-paper" / "paper_A" / "figures",
+    Path(__file__).resolve().parents[1].parent / "defense-correlation-paper" / "paper_A_mlj",
 ))
 if MS.is_dir():
-    shutil.copy2(out / "fig6_replication.pdf", MS / "fig6_replication.pdf")
-    print(f"copied fig6_replication.pdf -> {MS}")
+    # The journal build numbers its figure files in order of appearance.
+    shutil.copy2(out / "fig6_replication.pdf", MS / "Fig4.pdf")
+    print(f"copied fig6_replication.pdf -> {MS / 'Fig4.pdf'}")
 else:
     print(f"NOT copied: {MS} does not exist; copy it by hand before building")
 n_v = next(iter(vic.values()))[3]
