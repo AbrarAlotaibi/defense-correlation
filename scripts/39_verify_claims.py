@@ -407,6 +407,55 @@ if XAB.exists():
     if A.get("cohen_kappa") is not None:
         claim("cross kappa", f"{A['cohen_kappa']:.3f}", A["cohen_kappa"])
 
+# ---- pooled intervals on attack success ------------------------------------------
+# The text separates the perturbation aggregator from the five members whose estimates lie
+# inside the undefended interval, so both intervals are claims.
+for dn, tag in (("undefended", "ASR undefended pooled CI"), ("smoothllm", "ASR aggregator pooled CI")):
+    ci = (d["marginals"].get(dn) or {}).get("pooled_ci")
+    if ci:
+        claim(tag, f"[{ci[0]:.2f}, {ci[1]:.2f}]", ci[0])
+
+# ---- the perturbation aggregator on identical inputs -----------------------------
+# Separately searched arms differ in their prompts, so the aggregator's own effect is read
+# from the cross-evaluation, where both systems are scored on the same prompts.
+def _same_input(run):
+    path = R.parent / run / "seed0" / "cross" / "gold_resolved.jsonl"
+    if not path.exists():
+        return None
+    per = defaultdict(dict)
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if line.strip():
+            r = json.loads(line)
+            per[(r["attack"], r["defense"])][r["behaviour_id"]] = bool(r["breach"])
+    out = {}
+    for src in ("undefended", "smoothllm"):
+        u, a = per[(f"cross:{src}", "undefended")], per[(f"cross:{src}", "smoothllm")]
+        ids = sorted(u)
+        b = sum(1 for i in ids if u[i] and not a[i])
+        c = sum(1 for i in ids if a[i] and not u[i])
+        n, k = b + c, min(b, c)
+        pval = min(1.0, 2 * sum(math.comb(n, i) for i in range(k + 1)) / 2 ** n) if n else 1.0
+        out[src] = {"n": len(ids), "undef": sum(u[i] for i in ids) / len(ids),
+                    "agg": sum(a[i] for i in ids) / len(ids),
+                    "undef_only": b, "agg_only": c, "p": pval}
+    return out
+
+SI = _same_input("v2_llama2")
+if SI:
+    a, u = SI["smoothllm"], SI["undefended"]
+    claim("L2 same-input, aggregator prompts, undefended", f"breaches on {a['undef']:.2f}", a["undef"])
+    claim("L2 same-input, aggregator prompts, aggregator", f"aggregator on {a['agg']:.2f}", a["agg"])
+    claim("L2 same-input, aggregator-only breaches", f"{a['agg_only']} behaviors breach", a["agg_only"])
+    claim("L2 same-input, undefended-only breaches", f"{a['undef_only']} only without it", a["undef_only"])
+    claim("L2 same-input, McNemar p", f"p = {a['p']:.2f}", a["p"])
+    claim("L2 same-input, undefended prompts", f"{u['undef']:.2f} and {u['agg']:.2f}", u["undef"])
+    claim("L2 same-input, undefended prompts, discordant", f"{u['agg_only']} against {u['undef_only']}", u["agg_only"])
+SV = _same_input("v2_vicuna")
+if SV:
+    a, u = SV["smoothllm"], SV["undefended"]
+    claim("same-input, undefended prompts", f"{u['agg']:.2f} of the undefended arm's prompts, against {u['undef']:.2f}", u["agg"])
+    claim("same-input, aggregator prompts", f"{a['agg']:.2f} of its own arm's prompts, against {a['undef']:.2f}", a["agg"])
+
 print(f"{'claim':<34}{'expected in text':>18}  present?")
 bad = 0
 for name, want, present, val in checks:
