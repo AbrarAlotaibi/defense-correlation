@@ -43,6 +43,8 @@ Each file starts with a docstring that gives its inputs, outputs and usage.
 | `28_adjudication.py` | Draw the blinded sample; score two annotators |
 | `28b_adjudication_single.py` | Build the retest sample; merge and score a single annotator |
 | `28c_build_labeling_tool.py`, `templates/labeling_tool.html` | Build the offline labeling page |
+| `28d_adjudication_sensitivity.py` | Compare the annotator with the resolved labels; rerun the analysis on the annotator's labels |
+| `28e_fill_adjudication.py` | Write the adjudication figures into the manuscript |
 
 ## Manuscript checks
 

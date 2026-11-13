@@ -93,7 +93,7 @@ Runs reported in the paper:
 ## Where each reported number comes from
 
 No number in the paper is typed by hand. Each comes from one of these files, and
-`scripts/39_verify_claims.py` recomputes 180 of them and checks them against the manuscript
+`scripts/39_verify_claims.py` recomputes 189 of them and checks them against the manuscript
 text.
 
 | Paper section | File in `results/<run>/` | Produced by |
@@ -147,7 +147,15 @@ python scripts/28c_build_labeling_tool.py       --dir results/v2_vicuna/adjudica
 # open the page (on Windows, double-click open_labeling_tool.bat), label, download the CSV
 python scripts/28b_adjudication_single.py merge --dir results/v2_vicuna/adjudication
 python scripts/28b_adjudication_single.py score --dir results/v2_vicuna/adjudication
+python scripts/28d_adjudication_sensitivity.py  --run v2_vicuna --seeds 0 1 2
+python scripts/28e_fill_adjudication.py         --run v2_vicuna
 ```
+
+Stage 28d compares the annotator with the labels the paper uses and reruns the
+behavior-level analysis with the annotator's labels in place of the grader's. Stage 28e
+writes the resulting figures into the manuscript. The annotator's labels are in
+`labels_main.csv` and `sheet.csv`, and the scored results in `adjudication_single.json` and
+`adjudication_sensitivity.json`.
 
 The labeling page is a single offline HTML file. It shows only the request and the
 response. The grader's verdicts and the sampling strata are in `key.csv`, which the page

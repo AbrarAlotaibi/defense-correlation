@@ -456,6 +456,17 @@ if SV:
     claim("same-input, undefended prompts", f"{u['agg']:.2f} of the undefended arm's prompts, against {u['undef']:.2f}", u["agg"])
     claim("same-input, aggregator prompts", f"{a['agg']:.2f} of its own arm's prompts, against {a['undef']:.2f}", a["agg"])
 
+# ---- human adjudication ------------------------------------------------------------
+# Stage 28e writes one macro per adjudication figure. The same strings are rebuilt here from
+# the scored labels, so a figure edited by hand in the manuscript shows up as a mismatch.
+if (R / "adjudication" / "adjudication_sensitivity.json").exists():
+    import importlib.util
+    _spec = importlib.util.spec_from_file_location("fill_adjudication", REPO / "scripts" / "28e_fill_adjudication.py")
+    _fill = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_fill)
+    for _name, _value in _fill.macros(R.name).items():
+        claim(f"adjudication \\{_name}", "\\newcommand{\\%s}{%s}" % (_name, _value), _value)
+
 print(f"{'claim':<34}{'expected in text':>18}  present?")
 bad = 0
 for name, want, present, val in checks:
