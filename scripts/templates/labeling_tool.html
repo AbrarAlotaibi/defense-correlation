@@ -304,7 +304,9 @@
 <script>
 (function () {
   "use strict";
-  var DAY_MS = 24 * 60 * 60 * 1000;
+  // The retest opens as soon as the main set is complete. The annotator chooses the
+  // interval, and the label times record how long it was.
+  var RETEST_GAP_MS = 0;
   var BACKUP_EVERY = 50;
 
   function readData(id) {
@@ -348,7 +350,7 @@
     return n;
   }
   function mainComplete() { return SETS.main.length > 0 && countDone("main") === SETS.main.length; }
-  function retestOpensAt() { return state.mainCompletedAt ? state.mainCompletedAt + DAY_MS : null; }
+  function retestOpensAt() { return state.mainCompletedAt ? state.mainCompletedAt + RETEST_GAP_MS : null; }
   function retestOpen() {
     return SETS.retest.length > 0 && mainComplete() && state.mainCompletedAt !== null &&
            Date.now() >= retestOpensAt();
@@ -374,7 +376,7 @@
       lock.hidden = false;
       $("retest-lock-text").textContent = "The retest opens on " +
         new Date(retestOpensAt()).toLocaleString([], { dateStyle: "full", timeStyle: "short" }) +
-        ", one day after you finished the main set. The gap is what makes the retest meaningful.";
+        ".";
     } else { lock.hidden = true; }
 
     var backup = $("backup-notice");
@@ -388,7 +390,7 @@
     if (allDone) {
       $("done-title").textContent = "All " + total + " items in this set are labeled";
       $("done-text").textContent = state.set === "main"
-        ? "Download the labels and keep the file in the adjudication folder. You can still go back and change any label."
+        ? "Download the labels and keep the file in the adjudication folder. You can still go back and change any label. The retest is open: do it in a later session, some hours from now."
         : "Download the retest labels and keep the file in the adjudication folder next to the main one.";
     }
 

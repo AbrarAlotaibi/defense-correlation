@@ -7,7 +7,7 @@ in a new order and under new ids, without seeing the first labels.
 
   retest  Build retest_sheet.csv (retest_id, behaviour, response, annotator_1_retest_breach)
           and retest_key.csv (retest_id -> item_id) from sheet.csv. Run it now; open the
-          retest sheet only after the main sheet is finished and at least a day has passed.
+          retest sheet only after the main sheet is finished, in a later session.
 
   merge   Copy the labels downloaded from labeling_tool.html (labels_main.csv, and
           labels_retest.csv once it exists) into sheet.csv and retest_sheet.csv, and record
