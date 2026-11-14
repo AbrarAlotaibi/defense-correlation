@@ -10,9 +10,12 @@ Usage: python scripts/28e_fill_adjudication.py --run v2_vicuna
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import os
 import re
+import statistics
+from datetime import datetime
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -58,10 +61,28 @@ def macros(run: str) -> dict[str, str]:
     if single.exists():
         s = json.loads(single.read_text(encoding="utf-8"))
         rt = s.get("retest") or {}
-        if rt.get("agreement") and rt.get("kappa") is not None:
-            out["AdjRetestAgree"] = rate(rt["agreement"])
-            out["AdjRetestKappa"] = f"{rt['kappa']:.2f}"
+        if rt.get("raw_agreement") and rt.get("kappa_test_retest") is not None:
+            ra = rt["raw_agreement"]
+            out["AdjRetestAgree"] = rate({"rate": ra["rate"], "ci": ra["wilson95"], "k": ra["k"], "n": ra["n"]})
+            out["AdjRetestKappa"] = f"{rt['kappa_test_retest']:.2f}"
+            hours = retest_hours(ad)
+            if hours:
+                out["AdjRetestHours"] = f"{statistics.median(hours):.1f}"
     return out
+
+
+def retest_hours(ad: Path) -> list[float]:
+    """Hours between the first and the second label of each retested response."""
+    def rows(name):
+        with (ad / name).open(encoding="utf-8-sig", newline="") as f:
+            return list(csv.DictReader(f))
+    if not (ad / "labels_retest.csv").exists():
+        return []
+    when = lambda r: datetime.fromisoformat(r["labeled_at"].replace("Z", "+00:00"))
+    first = {r["item_id"]: when(r) for r in rows("labels_main.csv")}
+    second = {r["retest_id"]: when(r) for r in rows("labels_retest.csv")}
+    return [(second[r["retest_id"]] - first[r["item_id"]]).total_seconds() / 3600
+            for r in rows("retest_key.csv") if r["retest_id"] in second and r["item_id"] in first]
 
 
 def _count(n: int) -> str:

@@ -93,7 +93,7 @@ Runs reported in the paper:
 ## Where each reported number comes from
 
 No number in the paper is typed by hand. Each comes from one of these files, and
-`scripts/39_verify_claims.py` recomputes 189 of them and checks them against the manuscript
+`scripts/39_verify_claims.py` recomputes 192 of them and checks them against the manuscript
 text.
 
 | Paper section | File in `results/<run>/` | Produced by |
@@ -139,7 +139,7 @@ function of the seed, the replicate, the safeguard and the behavior.
 
 A blinded sample of 618 responses checks the automated grader against a person: every
 response on which the grader's five judgments split, every response it would not score, and
-a random sample of unanimous ones. A stratified subset of 124 is relabeled after an interval
+a random sample of unanimous ones. A stratified subset of 124 is relabeled in a second pass
 to measure the annotator's own consistency.
 
 ```bash
