@@ -456,6 +456,27 @@ if SV:
     claim("same-input, undefended prompts", f"{u['agg']:.2f} of the undefended arm's prompts, against {u['undef']:.2f}", u["agg"])
     claim("same-input, aggregator prompts", f"{a['agg']:.2f} of its own arm's prompts, against {a['undef']:.2f}", a["agg"])
 
+# ---- the aggregator against the undefended arm, paired ----------------------------
+# The text says the aggregator lowers attack success under the genetic search. Paired by
+# behavior and replicate, that is a count of discordant attempts and an exact McNemar test.
+_pair = {}
+for _s in (0, 1, 2):
+    _g = R / f"seed{_s}" / "gold_resolved.jsonl"
+    if _g.exists():
+        for _line in _g.read_text(encoding="utf-8").splitlines():
+            if _line.strip():
+                _r = json.loads(_line)
+                if _r.get("attack") == "adaptive" and _r["defense"] in ("undefended", "smoothllm"):
+                    _pair.setdefault(_r["defense"], {})[(_s, _r["behaviour_id"])] = bool(_r["breach"])
+if len(_pair) == 2:
+    _u, _a = _pair["undefended"], _pair["smoothllm"]
+    _b = sum(1 for k in _u if _u[k] and not _a[k])
+    _c = sum(1 for k in _u if _a[k] and not _u[k])
+    _n, _k = _b + _c, min(_b, _c)
+    _p = min(1.0, 2 * sum(math.comb(_n, i) for i in range(_k + 1)) / 2 ** _n)
+    claim("aggregator vs undefended, discordant", f"{_b} attempts breach only without it and {_c} only with it", _b)
+    claim("aggregator vs undefended, McNemar p", f"p = {_p:.4f}", _p)
+
 # ---- human adjudication ------------------------------------------------------------
 # Stage 28e writes one macro per adjudication figure. The same strings are rebuilt here from
 # the scored labels, so a figure edited by hand in the manuscript shows up as a mismatch.
