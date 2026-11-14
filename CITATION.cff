@@ -24,4 +24,9 @@ preferred-citation:
     - family-names: Ahmed
       given-names: Moataz
   year: 2026
-  notes: "Manuscript submitted for publication"
+  url: "https://arxiv.org/abs/2608.28327"
+  identifiers:
+    - type: other
+      value: "arXiv:2608.28327"
+      description: "arXiv preprint, version 2"
+  notes: "Submitted to Machine Learning"

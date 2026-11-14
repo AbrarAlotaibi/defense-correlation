@@ -3,8 +3,11 @@
 Code, data and analysis for the paper
 
 > Abrar Alotaibi and Moataz Ahmed. *How Diverse Are Layered Safeguards? Estimands and
-> Measurement for Ensembles of LLM Jailbreak Defenses.* Manuscript submitted for
-> publication, 2026.
+> Measurement for Ensembles of LLM Jailbreak Defenses.* Submitted to *Machine Learning*,
+> 2026. Preprint: [arXiv:2608.28327](https://arxiv.org/abs/2608.28327) (version 2).
+
+The tag `mlj-submission-2026-11` marks the state of this repository from which the
+submitted manuscript was built and checked.
 
 Language models are deployed behind stacks of safeguards on the assumption that the layers
 fail on different inputs. This repository measures that assumption. It contains the
@@ -175,8 +178,8 @@ never reads.
 
 ## Earlier version
 
-An earlier and longer manuscript reporting a first version of this experiment was posted as
-arXiv:2608.28327. Its text inserts, figures and preregistration are in `earlier_version/`,
+An earlier and longer manuscript reporting a first version of this experiment is version 1
+of the same arXiv record, arXiv:2608.28327v1. Its text inserts, figures and preregistration are in `earlier_version/`,
 and its runs are `results/hpc_*` and `results/primary_*`. That harness had four defects,
 listed at the top of [REPRODUCING.md](REPRODUCING.md), and its headline numbers are
 superseded by the runs above. Nothing in the current paper depends on them.
@@ -184,12 +187,14 @@ superseded by the runs above. Nothing in the current paper depends on them.
 ## Citation
 
 ```bibtex
-@unpublished{alotaibi2026diverse,
-  author = {Alotaibi, Abrar and Ahmed, Moataz},
-  title  = {How Diverse Are Layered Safeguards? Estimands and Measurement for
-            Ensembles of {LLM} Jailbreak Defenses},
-  note   = {Manuscript submitted for publication},
-  year   = {2026}
+@misc{alotaibi2026diverse,
+  author        = {Alotaibi, Abrar and Ahmed, Moataz},
+  title         = {How Diverse Are Layered Safeguards? Estimands and Measurement for
+                   Ensembles of {LLM} Jailbreak Defenses},
+  year          = {2026},
+  eprint        = {2608.28327},
+  archivePrefix = {arXiv},
+  note          = {Version 2. Submitted to Machine Learning}
 }
 ```
 
